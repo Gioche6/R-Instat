@@ -20,8 +20,8 @@ Public Class dlgSelectColumns
     Private bReset As Boolean = True
     Private bFirstLoad As Boolean = True
     Public clsAddColumnSelection As New RFunction
-    Private clsConditionsList As RFunction
-    Private clsFromToOperation As ROperator
+    Private clsConditionsList As New RFunction
+    Private clsFromToOperation As New ROperator
     Private Sub dlgSelectColumns_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If bFirstLoad Then
             InitialiseDialog()
@@ -37,6 +37,9 @@ Public Class dlgSelectColumns
     End Sub
 
     Private Sub InitialiseDialog()
+
+        ucrBase.iHelpTopicID = 104
+
         ucrSelectorForColumnSelection.SetParameter(New RParameter("data_name", 0))
         ucrSelectorForColumnSelection.SetParameterIsString()
         ucrSelectorForColumnSelection.HideShowAddOrDataOptionsOrListView(bDataOptionsVisible:=False)
@@ -50,7 +53,7 @@ Public Class dlgSelectColumns
         ucrInputSelectOperation.SetItems({"Columns", "Starts with", "Ends with", "Contains", "Matches", "Numeric range", "Last column", "Where"})
         ucrInputSelectOperation.SetDropDownStyleAsNonEditable()
 
-        ucrInputColumnType.SetItems({"Numeric", "Factor", "Character", "Logical", "Variable label", "Empty columns", "NA columns"})
+        ucrInputColumnType.SetItems({"Numeric", "Factor", "Character", "Logical", "Variable label", "Value label", "Empty columns", "NA columns"})
         ucrInputColumnType.SetDropDownStyleAsNonEditable()
 
         ucrInputSelectOperation.AddToLinkedControls(ucrChkIgnoreCase, {"Starts with", "Ends with", "Contains", "Matches"}, bNewLinkedHideIfParameterMissing:=True)
@@ -210,7 +213,9 @@ Public Class dlgSelectColumns
                 ElseIf strValue = "Logical" Then
                     clsParametersList.AddParameter("fn", "is.logical", iPosition:=0)
                 ElseIf strValue = "Variable label" Then
-                    clsParametersList.AddParameter("fn", "is.containlabel", iPosition:=0)
+                    clsParametersList.AddParameter("fn", "is.containVariableLabel", iPosition:=0)
+                ElseIf strValue = "Value label" Then
+                    clsParametersList.AddParameter("fn", "is.containValueLabel", iPosition:=0)
                 ElseIf strValue = "Empty columns" Then
                     clsParametersList.AddParameter("fn", "is.emptyvariable", iPosition:=0)
                 ElseIf strValue = "NA columns" Then

@@ -125,7 +125,8 @@ DataBook$set("public", "replace_instat_object", function(new_instat_object) {
 )
 
 DataBook$set("public", "set_data_objects", function(new_data_objects) {
-  if(!is.list(new_data_objects) || (length(new_data_objects) > 0 && !all("data_object" %in% sapply(new_data_objects, class)))) {
+  # new_data_objects could be of old class type 'data_object'
+  if(!is.list(new_data_objects) || (length(new_data_objects) > 0 && !any(c("DataSheet", "data_object") %in% sapply(new_data_objects, class)))) {
     stop("new_data_objects must be a list of data_objects")
   }
   else private$.data_sheets <- new_data_objects
@@ -170,8 +171,9 @@ DataBook$set("public", "import_RDS", function(data_RDS, keep_existing = TRUE, ov
       new_links_list <- data_RDS$get_links()
       for(data_obj_name in data_RDS$get_data_names()) {
         data_obj_clone <- self$clone_data_object(data_RDS$get_data_objects(data_obj_name), include_objects = include_objects, include_metadata = include_metadata, include_logs = include_logs, include_filters = include_filters, include_column_selections = include_column_selections, include_calculations = include_calculations, include_comments = include_comments)
-        if(data_obj_name %in% self$get_data_names() && !overwrite_existing) {
-          new_name <- next_default_item(data_obj_name, self$get_data_names())
+        if(tolower(data_obj_name) %in% tolower(self$get_data_names()) && !overwrite_existing) {
+          warning("Cannot have data frames with the same name only differing by case. Data frame will be renamed.")
+          new_name <- next_default_item(tolower(data_obj_name), tolower(self$get_data_names()))
           data_obj_clone$append_to_metadata(data_name_label, new_name)
           if(new_name != data_obj_name) {
             for(i in seq_along(new_links_list)) {
@@ -375,6 +377,11 @@ DataBook$set("public", "get_column_labels", function(data_name, columns) {
 }
 )
 
+DataBook$set("public", "get_data_frame_label", function(data_name, use_current_filter = FALSE) {
+  self$get_data_objects(data_name)$get_data_frame_label(use_current_filter)
+}
+)
+
 DataBook$set("public", "get_data_frame_metadata", function(data_name, label, include_calculated = TRUE, excluded_not_for_display = TRUE) {
   return(self$get_data_objects(data_name)$get_metadata(label = label, include_calculated = include_calculated, excluded_not_for_display = excluded_not_for_display))
 }
@@ -389,7 +396,13 @@ DataBook$set("public", "get_combined_metadata", function(convert_to_character = 
       if(length(templist[[j]]) > 1 || is.list(templist[[j]])) templist[[j]] <- paste(as.character(templist[[j]]), collapse = ",")
       retlist[i, names(templist[j])] = templist[[j]]
     }
-    if(all(c(data_name_label, label_label) %in% names(retlist))) retlist <- retlist[ ,c(c(data_name_label, label_label), sort(setdiff(names(retlist), c(data_name_label, label_label))))]
+    if(all(c(data_name_label, label_label, row_count_label, column_count_label,
+             data_type_label, is_calculated_label, is_hidden_label, is_linkable, key_label) %in% names(retlist))){
+      retlist <- retlist[ ,c(c(data_name_label, label_label, row_count_label, column_count_label, data_type_label,
+                           is_calculated_label, is_hidden_label, is_linkable, key_label),
+                           sort(setdiff(names(retlist), c(data_name_label,label_label, row_count_label, column_count_label,
+                           data_type_label, is_calculated_label,is_hidden_label,is_linkable, key_label))))]
+    }
     else if(data_name_label %in% names(retlist)) retlist <- retlist[ ,c(data_name_label, sort(setdiff(names(retlist), data_name_label)))]
     i = i + 1
   }
@@ -1092,7 +1105,7 @@ DataBook$set("public", "add_metadata_field", function(data_name, property, new_v
 DataBook$set("public", "reorder_dataframes", function(data_frames_order) {
   if(length(data_frames_order) != length(names(private$.data_sheets))) stop("number data frames to order should be equal to number of dataframes in the object")
   if(!setequal(data_frames_order,names(private$.data_sheets))) stop("data_frames_order must be a permutation of the dataframe names.")
-  
+
   self$set_data_objects(private$.data_sheets[data_frames_order])
   self$data_objects_changed <- TRUE
 } 
@@ -1378,7 +1391,7 @@ DataBook$set("public", "remove_column_colours", function(data_name) {
 )
 
 DataBook$set("public","set_column_colours_by_metadata", function(data_name, columns, property) {
-  self$get_data_objects(data_name)$set_column_colours_by_metadata(columns, property)
+  self$get_data_objects(data_name)$set_column_colours_by_metadata(data_name, columns, property)
 }
 )
 
@@ -1392,8 +1405,8 @@ DataBook$set("public","make_date_yearmonthday", function(data_name, year, month,
 }
 )
 
-DataBook$set("public","make_date_yeardoy", function(data_name, year, doy, year_format = "%Y", doy_format = "%j", doy_typical_length = "366") {
-  self$get_data_objects(data_name)$make_date_yeardoy(year = year, doy = doy, year_format = year_format, doy_format = doy_format, doy_typical_length = doy_typical_length)
+DataBook$set("public","make_date_yeardoy", function(data_name, year, doy, base, doy_typical_length = "366") {
+  self$get_data_objects(data_name)$make_date_yeardoy(year = year, doy = doy, base = base, doy_typical_length = doy_typical_length)
 }
 )
 
@@ -1553,7 +1566,7 @@ DataBook$set("public", "get_key_names", function(data_name, include_overall = TR
 )
 
 DataBook$set("public", "remove_key", function(data_name, key_name) {
-  self$get_data_objects(data_name)$remove_key(key_name)
+  self$get_data_objects(data_name)$remove_key(key_name = key_name)
 }
 )
 
@@ -2725,3 +2738,8 @@ DataBook$set("public", "remove_empty", function(data_name,  which = c("rows","co
 DataBook$set("public", "replace_values_with_NA", function(data_name, row_index, column_index) {
   self$get_data_objects(data_name)$replace_values_with_NA(row_index = row_index, column_index = column_index)
 })
+
+DataBook$set("public","has_labels", function(data_name, col_names) {
+  self$get_data_objects(data_name)$has_labels(col_names)
+}
+)

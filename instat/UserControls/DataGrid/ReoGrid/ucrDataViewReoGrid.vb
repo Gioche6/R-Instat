@@ -54,7 +54,7 @@ Public Class ucrDataViewReoGrid
     Public Sub AddRowData(dataFrame As clsDataFrame) Implements IDataViewGrid.AddRowData
         Dim textColour As Color
         Dim strRowNames As String()
-
+        Dim strLongestRowHeaderText As String = ""
         If dataFrame.iDisplayedRowCount = 0 Then
             AddBlankRow(grdData.CurrentWorksheet)
             Exit Sub
@@ -68,20 +68,32 @@ Public Class ucrDataViewReoGrid
             textColour = Color.DarkBlue
         End If
 
-        strRowNames = dataFrame.strRowNames()
+        strRowNames = dataFrame.DisplayedRowNames()
         For i = 0 To grdData.CurrentWorksheet.Rows - 1
             For j = 0 To grdData.CurrentWorksheet.Columns - 1
-                grdData.CurrentWorksheet(row:=i, col:=j) = dataFrame.Data(i, j)
+                grdData.CurrentWorksheet(row:=i, col:=j) = dataFrame.DisplayedData(i, j)
             Next
             grdData.CurrentWorksheet.RowHeaders.Item(i).Text = strRowNames(i)
             grdData.CurrentWorksheet.RowHeaders(i).TextColor = textColour
+
+            'get longest row header text
+            If strRowNames(i).Length > strLongestRowHeaderText.Length Then
+                strLongestRowHeaderText = strRowNames(i)
+            End If
         Next
+
+        'todo. As of 30/05/2022, the reogrid control version used did not have this setting option
+        'see issue #7221 for more information.
+        'get pixel size equivalent of the longest row header text
+        'and use it as the row header width.
+        'TODO. Note , the text length may not always reflect the correct pixel to use. See comments in issue #7221 
+        grdData.CurrentWorksheet.RowHeaderWidth = TextRenderer.MeasureText(strLongestRowHeaderText, Me.Font).Width
     End Sub
 
     Public Function GetSelectedColumns() As List(Of clsColumnHeaderDisplay) Implements IDataViewGrid.GetSelectedColumns
         Dim lstColumns As New List(Of clsColumnHeaderDisplay)
         For i As Integer = grdData.CurrentWorksheet.SelectionRange.Col To grdData.CurrentWorksheet.SelectionRange.Col + grdData.CurrentWorksheet.SelectionRange.Cols - 1
-            lstColumns.Add(GetCurrentDataFrameFocus().clsVisiblePage.lstColumns(i))
+            lstColumns.Add(GetCurrentDataFrameFocus().clsVisibleDataFramePage.lstColumns(i))
         Next
         Return lstColumns
     End Function
@@ -138,8 +150,8 @@ Public Class ucrDataViewReoGrid
 
     Private Sub Worksheet_AfterCellEdit(sender As Object, e As CellAfterEditEventArgs)
         RaiseEvent ReplaceValueInData(e.NewData.ToString(),
-                           GetCurrentDataFrameFocus().clsVisiblePage.lstColumns(e.Cell.Column).strName,
-                           GetCurrentDataFrameFocus().clsVisiblePage.RowNames()(e.Cell.Row))
+                           GetCurrentDataFrameFocus().clsVisibleDataFramePage.lstColumns(e.Cell.Column).strName,
+                           GetCurrentDataFrameFocus().clsVisibleDataFramePage.RowNames()(e.Cell.Row))
         e.EndReason = unvell.ReoGrid.EndEditReason.Cancel
     End Sub
 
@@ -147,7 +159,7 @@ Public Class ucrDataViewReoGrid
     Private Sub Worksheet_BeforePaste(sender As Object, e As BeforeRangeOperationEventArgs)
         e.IsCancelled = True 'prevents pasted data from being added directly into the data view
         'validate columns
-        If e.Range.EndCol >= GetCurrentDataFrameFocus().clsVisiblePage.lstColumns.Count Then
+        If e.Range.EndCol >= GetCurrentDataFrameFocus().clsVisibleDataFramePage.lstColumns.Count Then
             'this happens when Ctrl + V is pressed and the data to be pasted has more columns
             'than columns between start and end column
             MsgBox("Columns copied are more than the current data frame columns.", MsgBoxStyle.Critical, "Excess Columns")

@@ -22,9 +22,13 @@ Public MustInherit Class ucrReoGrid
 
     Protected _clsDataBook As clsDataBook
 
+    ''' <summary>
+    ''' Gets current worksheet adapter
+    ''' </summary>
+    ''' <returns>Worksheet adapter if a worksheet is selected, else nothing</returns>
     Public Property CurrentWorksheet As clsWorksheetAdapter Implements IGrid.CurrentWorksheet
         Get
-            Return New clsWorksheetAdapter(grdData.CurrentWorksheet)
+            Return If(grdData.CurrentWorksheet Is Nothing, Nothing, New clsWorksheetAdapter(grdData.CurrentWorksheet))
         End Get
         Set(value As clsWorksheetAdapter)
             grdData.CurrentWorksheet = grdData.Worksheets.Where(Function(x) x.Name = value.Name).FirstOrDefault
@@ -66,6 +70,28 @@ Public MustInherit Class ucrReoGrid
         AttachEventsToWorksheet(fillWorkSheet)
         Return New clsWorksheetAdapter(fillWorkSheet)
     End Function
+
+    Private Sub ReOrderWorksheets() Implements IGrid.ReOrderWorksheets
+        'assuming the databook will always have all the data frames 
+        'and the grid may not have all the data frame worksheets equivalent
+        'and all data frames in the data book have changed their order positions 
+        'get data frames sheets in the grid based on the databook data frames position order
+        'and add it to the list.
+        Dim lstWorkSheetsFound As New List(Of Worksheet)
+        For Each clsDataframe In _clsDataBook.DataFrames
+            Dim fillWorkSheet As Worksheet = grdData.GetWorksheetByName(clsDataframe.strName)
+            If fillWorkSheet IsNot Nothing Then
+                lstWorkSheetsFound.Add(fillWorkSheet)
+            End If
+        Next
+        If lstWorkSheetsFound.Count > 1 Then
+            'reorder the worksheets based on the filled list
+            For i As Integer = 0 To lstWorkSheetsFound.Count - 1
+                grdData.MoveWorksheet(lstWorkSheetsFound(i), i)
+                grdData.CurrentWorksheet = lstWorkSheetsFound(i)
+            Next
+        End If
+    End Sub
 
     Public Sub CopyRange() Implements IGrid.CopyRange
         grdData.CurrentWorksheet.Copy()
@@ -186,15 +212,24 @@ Public MustInherit Class ucrReoGrid
     End Function
 
     Private Sub UpdateWorksheetStyle(workSheet As Worksheet)
+        'issue with reo grid that means if RangePosition.EntireRange is used then the back color 
+        'changes. This would then override the back color set in R
         If frmMain.clsInstatOptions IsNot Nothing Then
-            workSheet.SetRangeStyles(RangePosition.EntireRange, New WorksheetRangeStyle() With {
+            'Set enitre range apart from top row
+            workSheet.SetRangeStyles(New RangePosition(1, 0, workSheet.RowCount, workSheet.ColumnCount), New WorksheetRangeStyle() With {
+                                .Flag = PlainStyleFlag.TextColor Or PlainStyleFlag.FontSize Or PlainStyleFlag.FontName,
+                                .TextColor = frmMain.clsInstatOptions.clrEditor,
+                                .FontSize = frmMain.clsInstatOptions.fntEditor.Size,
+                                .FontName = frmMain.clsInstatOptions.fntEditor.Name
+                                })
+            'Set top row
+            workSheet.SetRangeStyles(New RangePosition(0, 0, 1, workSheet.ColumnCount), New WorksheetRangeStyle() With {
                                 .Flag = PlainStyleFlag.TextColor Or PlainStyleFlag.FontSize Or PlainStyleFlag.FontName,
                                 .TextColor = frmMain.clsInstatOptions.clrEditor,
                                 .FontSize = frmMain.clsInstatOptions.fntEditor.Size,
                                 .FontName = frmMain.clsInstatOptions.fntEditor.Name
                                 })
         End If
-
     End Sub
 
     Private Sub ucrReoGrid_Load(sender As Object, e As EventArgs) Handles MyBase.Load
