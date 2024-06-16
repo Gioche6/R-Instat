@@ -18,7 +18,7 @@ Partial Class dlgThreeVariablePivotTable
     Private components As System.ComponentModel.IContainer
 
     'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
+    'It can be modified using the Windows Form Designer.
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
@@ -71,7 +71,7 @@ Partial Class dlgThreeVariablePivotTable
         '
         Me.lblTableChart.AutoSize = True
         Me.lblTableChart.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.lblTableChart.Location = New System.Drawing.Point(6, 233)
+        Me.lblTableChart.Location = New System.Drawing.Point(9, 233)
         Me.lblTableChart.Name = "lblTableChart"
         Me.lblTableChart.Size = New System.Drawing.Size(73, 13)
         Me.lblTableChart.TabIndex = 63
@@ -81,7 +81,7 @@ Partial Class dlgThreeVariablePivotTable
         '
         Me.lblSummary.AutoSize = True
         Me.lblSummary.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.lblSummary.Location = New System.Drawing.Point(6, 265)
+        Me.lblSummary.Location = New System.Drawing.Point(9, 265)
         Me.lblSummary.Name = "lblSummary"
         Me.lblSummary.Size = New System.Drawing.Size(59, 13)
         Me.lblSummary.TabIndex = 65
@@ -91,7 +91,7 @@ Partial Class dlgThreeVariablePivotTable
         '
         Me.ucrChkNumericVariable.AutoSize = True
         Me.ucrChkNumericVariable.Checked = False
-        Me.ucrChkNumericVariable.Location = New System.Drawing.Point(244, 179)
+        Me.ucrChkNumericVariable.Location = New System.Drawing.Point(244, 175)
         Me.ucrChkNumericVariable.Name = "ucrChkNumericVariable"
         Me.ucrChkNumericVariable.Size = New System.Drawing.Size(170, 23)
         Me.ucrChkNumericVariable.TabIndex = 67
@@ -135,7 +135,7 @@ Partial Class dlgThreeVariablePivotTable
         '
         Me.ucrReceiverAdditionalRowFactor.AutoSize = True
         Me.ucrReceiverAdditionalRowFactor.frmParent = Me
-        Me.ucrReceiverAdditionalRowFactor.Location = New System.Drawing.Point(244, 208)
+        Me.ucrReceiverAdditionalRowFactor.Location = New System.Drawing.Point(244, 202)
         Me.ucrReceiverAdditionalRowFactor.Margin = New System.Windows.Forms.Padding(0)
         Me.ucrReceiverAdditionalRowFactor.Name = "ucrReceiverAdditionalRowFactor"
         Me.ucrReceiverAdditionalRowFactor.Selector = Nothing
@@ -147,7 +147,7 @@ Partial Class dlgThreeVariablePivotTable
         'ucrSavePivot
         '
         Me.ucrSavePivot.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ucrSavePivot.Location = New System.Drawing.Point(9, 366)
+        Me.ucrSavePivot.Location = New System.Drawing.Point(9, 389)
         Me.ucrSavePivot.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ucrSavePivot.Name = "ucrSavePivot"
         Me.ucrSavePivot.Size = New System.Drawing.Size(382, 23)
@@ -157,7 +157,7 @@ Partial Class dlgThreeVariablePivotTable
         '
         Me.ucrChkIncludeSubTotals.AutoSize = True
         Me.ucrChkIncludeSubTotals.Checked = False
-        Me.ucrChkIncludeSubTotals.Location = New System.Drawing.Point(9, 194)
+        Me.ucrChkIncludeSubTotals.Location = New System.Drawing.Point(9, 198)
         Me.ucrChkIncludeSubTotals.Name = "ucrChkIncludeSubTotals"
         Me.ucrChkIncludeSubTotals.Size = New System.Drawing.Size(167, 23)
         Me.ucrChkIncludeSubTotals.TabIndex = 58
@@ -179,7 +179,7 @@ Partial Class dlgThreeVariablePivotTable
         '
         Me.ucrChkSelectedVariable.AutoSize = True
         Me.ucrChkSelectedVariable.Checked = False
-        Me.ucrChkSelectedVariable.Location = New System.Drawing.Point(244, 237)
+        Me.ucrChkSelectedVariable.Location = New System.Drawing.Point(244, 230)
         Me.ucrChkSelectedVariable.Name = "ucrChkSelectedVariable"
         Me.ucrChkSelectedVariable.Size = New System.Drawing.Size(135, 23)
         Me.ucrChkSelectedVariable.TabIndex = 56
@@ -201,7 +201,7 @@ Partial Class dlgThreeVariablePivotTable
         '
         Me.ucrBase.AutoSize = True
         Me.ucrBase.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ucrBase.Location = New System.Drawing.Point(9, 397)
+        Me.ucrBase.Location = New System.Drawing.Point(9, 420)
         Me.ucrBase.Name = "ucrBase"
         Me.ucrBase.Size = New System.Drawing.Size(408, 52)
         Me.ucrBase.TabIndex = 51
@@ -247,7 +247,7 @@ Partial Class dlgThreeVariablePivotTable
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoSize = True
-        Me.ClientSize = New System.Drawing.Size(417, 456)
+        Me.ClientSize = New System.Drawing.Size(417, 481)
         Me.Controls.Add(Me.lblFactorLevels)
         Me.Controls.Add(Me.ucrReceiverFactorLevels)
         Me.Controls.Add(Me.ucrChkNumericVariable)

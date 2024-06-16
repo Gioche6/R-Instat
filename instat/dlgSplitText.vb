@@ -16,6 +16,12 @@
 
 Imports instat.Translations
 Public Class dlgSplitText
+    Public enumSplitMode As String = SplitMode.Prepare
+    Public Enum SplitMode
+        Prepare
+        Climatic
+    End Enum
+
     Public bFirstLoad As Boolean = True
     Private bReset As Boolean = True
     Private clsTextComponentsFixed, clsTextComponentsMaximum, clsStringCollFunction As New RFunction
@@ -33,6 +39,7 @@ Public Class dlgSplitText
             SetDefaults()
         End If
         SetRCodeForControls(bReset)
+        SetHelpOptions()
         bReset = False
         TestOKEnabled()
         autoTranslate(Me)
@@ -88,7 +95,6 @@ Public Class dlgSplitText
         ucrSaveColumn.SetDataFrameSelector(ucrSelectorSplitTextColumn.ucrAvailableDataFrames)
         ucrSaveColumn.SetLabelText("Prefix for New Columns:")
         ucrSaveColumn.SetIsComboBox()
-        ucrSaveColumn.SetAssignToBooleans(bTempAssignToIsPrefix:=True)
         ucrSaveColumn.setLinkedReceiver(ucrReceiverSplitTextColumn)
     End Sub
 
@@ -101,6 +107,7 @@ Public Class dlgSplitText
         clsPatternDummyFunction = New RFunction
 
         ucrSelectorSplitTextColumn.Reset()
+        ucrSaveColumn.Reset()
 
         ucrInputRegexPattern.SetName("")
 
@@ -126,7 +133,7 @@ Public Class dlgSplitText
         clsTextComponentsMaximum.AddParameter("n", "Inf", iPosition:=2)
         clsTextComponentsMaximum.AddParameter("simplify", "TRUE", iPosition:=3)
 
-        clsTextComponentsFixed.SetAssignTo(strTemp:="split", strTempDataframe:=ucrSelectorSplitTextColumn.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempColumn:="split", bAssignToIsPrefix:=True)
+        clsTextComponentsFixed.SetAssignTo(ucrSaveColumn.GetText(), strTempDataframe:=ucrSelectorSplitTextColumn.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempColumn:=ucrSaveColumn.GetText())
         clsTextComponentsMaximum.SetAssignTo("split", strTempDataframe:=ucrSelectorSplitTextColumn.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempColumn:="split", bAssignToIsPrefix:=True)
         clsBinaryColumns.SetAssignTo("split", strTempDataframe:=ucrSelectorSplitTextColumn.ucrAvailableDataFrames.cboAvailableDataFrames.Text, bAssignToColumnWithoutNames:=True)
         ucrBase.clsRsyntax.SetBaseRFunction(clsTextComponentsFixed)
@@ -135,7 +142,10 @@ Public Class dlgSplitText
     Private Sub SetRCodeForControls(bReset As Boolean)
         ucrReceiverSplitTextColumn.AddAdditionalCodeParameterPair(clsTextComponentsMaximum, New RParameter("string", 0), iAdditionalPairNo:=1)
         ucrReceiverSplitTextColumn.AddAdditionalCodeParameterPair(clsBinaryColumns, New RParameter("var", 0), iAdditionalPairNo:=2)
-        ucrSaveColumn.AddAdditionalRCode(clsTextComponentsMaximum, bReset)
+
+        ucrSaveColumn.AddAdditionalRCode(clsTextComponentsMaximum, iAdditionalPairNo:=1)
+        ucrSaveColumn.AddAdditionalRCode(clsBinaryColumns, iAdditionalPairNo:=2)
+
         ucrReceiverSplitTextColumn.SetRCode(clsTextComponentsFixed, bReset)
         ucrInputPattern.SetRCode(clsPatternDummyFunction, bReset)
         ucrNudPieces.SetRCode(clsTextComponentsFixed, bReset)
@@ -143,7 +153,6 @@ Public Class dlgSplitText
         ucrPnlSplitText.SetRCode(ucrBase.clsRsyntax.clsBaseFunction, bReset)
         ucrPnlTextComponents.SetRCode(ucrBase.clsRsyntax.clsBaseFunction, bReset)
         ucrSaveColumn.SetRCode(clsTextComponentsFixed, bReset)
-        ucrSaveColumn.AddAdditionalRCode(clsBinaryColumns, bReset)
     End Sub
 
     Private Sub TestOKEnabled()
@@ -160,6 +169,16 @@ Public Class dlgSplitText
         TestOKEnabled()
         sdgConstructRegexExpression.ucrReceiverForRegex.Clear()
     End Sub
+
+    Private Sub SetHelpOptions()
+        Select Case enumSplitMode
+            Case SplitMode.Prepare
+                ucrBase.iHelpTopicID = 344
+            Case SplitMode.Climatic
+                ucrBase.iHelpTopicID = 601
+        End Select
+    End Sub
+
 
     Private Sub cmdAddkeyboard_Click(sender As Object, e As EventArgs) Handles cmdAddkeyboard.Click
         sdgConstructRegexExpression.ShowDialog()

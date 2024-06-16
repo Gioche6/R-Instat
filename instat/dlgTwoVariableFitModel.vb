@@ -25,7 +25,7 @@ Public Class dlgTwoVariableFitModel
     Private clsVisReg, clsFamilyFunction As New RFunction
     Private clsTransformFunction As New RFunction
     Private clsBrokenStickFirstOperator, clsBrokenStickSecondOperator, clsBrokenStickThirdOperator, clsBrokenStickGeneralOperator As New ROperator
-    Private clsBrokenStickSecondOperFunction, clsBrokenStickIFunc As New RFunction
+    Private clsBrokenStickSecondOperFunction, clsAOVFunction, clsBrokenStickIFunc As New RFunction
     Private clsSplineFunc As New RFunction
 
     'Tests
@@ -44,7 +44,7 @@ Public Class dlgTwoVariableFitModel
 
     'General case codes
     Private clsFormulaOperator As New ROperator
-    Private clsGLM, clsLM, clsLMOrGLM, clsAsNumeric, clsPolynomialFunc As New RFunction
+    Private clsGLMFunction, clsLM, clsLMOrGLM, clsAsNumeric, clsPolynomialFunc As New RFunction
     Private clsMonthFunc, clsYearFunc, clsAsFactorFunc As New RFunction
     Private clsAttach As New RFunction
     Private clsDetach As New RFunction
@@ -53,7 +53,7 @@ Public Class dlgTwoVariableFitModel
     Private clsRstandardFunction, clsHatvaluesFunction, clsResidualFunction, clsFittedValuesFunction As New RFunction
 
     'Display options codes
-    Public clsFormulaFunction, clsAnovaFunction, clsSummaryFunction, clsConfint As RFunction
+    Public clsFormulaFunction, clsAnovaFunction, clsSummaryFunction, clsConfint As New RFunction
 
     Private bRCodeSet As Boolean
     Private bReset As Boolean = True
@@ -170,7 +170,7 @@ Public Class dlgTwoVariableFitModel
         clsFormulaOperator = New ROperator
         clsPolynomialFunc = New RFunction
         clsLM = New RFunction
-        clsGLM = New RFunction
+        clsGLMFunction = New RFunction
         clsAsNumeric = New RFunction
         clsFamilyFunction = New RFunction
         clsFormulaFunction = New RFunction
@@ -225,6 +225,7 @@ Public Class dlgTwoVariableFitModel
         clsWilcoxTestOperator = New ROperator
         clsVarTestOperator = New ROperator
         clsPropTestOperator = New ROperator
+        clsAOVFunction = New RFunction
 
         ucrBase.clsRsyntax.ClearCodes()
 
@@ -239,10 +240,30 @@ Public Class dlgTwoVariableFitModel
         clsLM = clsRegressionDefaults.clsDefaultLmFunction.Clone
         clsLM.AddParameter("formula", clsROperatorParameter:=clsFormulaOperator, iPosition:=1)
         clsLM.AddParameter("na.action", "na.exclude", iPosition:=4)
+        clsLM.SetAssignToOutputObject(strRObjectToAssignTo:="last_model",
+                                           strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Model,
+                                           strRObjectFormatToAssignTo:=RObjectFormat.Text,
+                                           strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                           strObjectName:="last_model")
 
-        clsGLM = clsRegressionDefaults.clsDefaultGlmFunction.Clone
-        clsGLM.AddParameter("formula", clsROperatorParameter:=clsFormulaOperator, iPosition:=1)
-        clsGLM.AddParameter("na.action", "na.exclude", iPosition:=4)
+        clsAOVFunction = clsRegressionDefaults.clsDefaultAovFunction.Clone()
+        clsAOVFunction.AddParameter("formula", clsROperatorParameter:=clsFormulaOperator, iPosition:=0)
+        clsAOVFunction.AddParameter("na.action", "na.exclude", iPosition:=4)
+        clsAOVFunction.bExcludeAssignedFunctionOutput = False
+        clsAOVFunction.SetAssignToOutputObject(strRObjectToAssignTo:="last_model",
+                                           strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Model,
+                                           strRObjectFormatToAssignTo:=RObjectFormat.Text,
+                                           strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                           strObjectName:="last_model")
+
+        clsGLMFunction = clsRegressionDefaults.clsDefaultGlmFunction.Clone
+        clsGLMFunction.AddParameter("formula", clsROperatorParameter:=clsFormulaOperator, iPosition:=1)
+        clsGLMFunction.AddParameter("na.action", "na.exclude", iPosition:=4)
+        clsGLMFunction.SetAssignToOutputObject(strRObjectToAssignTo:="last_model",
+                                           strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Model,
+                                           strRObjectFormatToAssignTo:=RObjectFormat.Text,
+                                           strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                           strObjectName:="last_model")
 
         clsPolynomialFunc.SetRCommand("poly")
 
@@ -254,40 +275,33 @@ Public Class dlgTwoVariableFitModel
         clsVisReg.SetRCommand("visreg")
         clsVisReg.AddParameter("type", Chr(34) & "conditional" & Chr(34))
         clsVisReg.AddParameter("gg", "TRUE")
-        clsVisReg.iCallType = 3
         clsVisReg.bExcludeAssignedFunctionOutput = False
 
-        'Model
         clsFormulaFunction = clsRegressionDefaults.clsDefaultFormulaFunction.Clone
-        clsFormulaFunction.iCallType = 2
 
         'Summary
         clsSummaryFunction = clsRegressionDefaults.clsDefaultSummary.Clone
-        clsSummaryFunction.iCallType = 2
+        clsSummaryFunction.bExcludeAssignedFunctionOutput = False
 
         'ANOVA
         clsAnovaFunction = clsRegressionDefaults.clsDefaultAnovaFunction.Clone
-        clsAnovaFunction.iCallType = 2
+        clsAnovaFunction.bExcludeAssignedFunctionOutput = False
 
         'Confidence Interval
         clsConfint = clsRegressionDefaults.clsDefaultConfint.Clone
-        clsConfint.iCallType = 2
+        clsConfint.bExcludeAssignedFunctionOutput = False
 
         clsAsNumeric.SetRCommand("as.numeric")
 
         clsFamilyFunction = ucrDistributionChoice.clsCurrRFunction
-        clsGLM.AddParameter("family", clsRFunctionParameter:=clsFamilyFunction)
+        clsGLMFunction.AddParameter("family", clsRFunctionParameter:=clsFamilyFunction)
 
-        clsLM.SetAssignTo(strTemp:=ucrSaveModels.GetText, strTempDataframe:=ucrSelectorSimpleReg.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempModel:="last_model", bAssignToIsPrefix:=True)
-        clsGLM.SetAssignTo(strTemp:=ucrSaveModels.GetText, strTempDataframe:=ucrSelectorSimpleReg.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempModel:="last_model", bAssignToIsPrefix:=True)
+
         clsLMOrGLM = clsLM
 
         clsResidualFunction.SetRCommand("residuals")
-
         clsFittedValuesFunction.SetRCommand("fitted.values")
-
         clsRstandardFunction.SetRCommand("rstandard")
-
         clsHatvaluesFunction.SetRCommand("hatvalues")
 
         'Broken stick
@@ -411,6 +425,77 @@ Public Class dlgTwoVariableFitModel
         bResetFirstFunction = True
     End Sub
 
+    Private Sub assignToControlsChanged(ucrChangedControl As ucrCore) Handles ucrSaveModels.ControlValueChanged
+
+        '---------------------------------------------------------------------
+        'model summaries outputs
+
+        'stats output formula for the model
+        clsFormulaFunction.AddParameter("x", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+        clsFormulaFunction.SetAssignToOutputObject(strRObjectToAssignTo:="last_summary",
+                                           strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Summary,
+                                           strRObjectFormatToAssignTo:=RObjectFormat.Text,
+                                           strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                           strObjectName:="last_summary")
+
+        'anova output summary for the model
+        clsAnovaFunction.AddParameter("object", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+        clsAnovaFunction.SetAssignToOutputObject(strRObjectToAssignTo:="last_summary",
+                                           strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Summary,
+                                           strRObjectFormatToAssignTo:=RObjectFormat.Text,
+                                           strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                           strObjectName:="last_summary")
+
+        'estimates output for the model
+        clsSummaryFunction.AddParameter("object", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+        clsSummaryFunction.SetAssignToOutputObject(strRObjectToAssignTo:="last_summary",
+                                           strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Summary,
+                                           strRObjectFormatToAssignTo:=RObjectFormat.Text,
+                                           strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                           strObjectName:="last_summary")
+
+
+        'confidence output limits for the model
+        clsConfint.AddParameter("object", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+        clsConfint.SetAssignToOutputObject(strRObjectToAssignTo:="last_summary",
+                                           strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Summary,
+                                           strRObjectFormatToAssignTo:=RObjectFormat.Text,
+                                           strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                           strObjectName:="last_summary")
+
+        '---------------------------------------------------------------------
+        'column outputs
+        'note set assign has not been set here because it's done at the sub dialog level
+        'through individual save controls linked to this dialog data frame selector
+
+        clsResidualFunction.AddParameter("object", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+        clsFittedValuesFunction.AddParameter("object", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+        clsRstandardFunction.AddParameter("model", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+        clsHatvaluesFunction.AddParameter("model", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+
+        '---------------------------------------------------------------------
+        'graphical outputs
+
+        'model plot output
+        clsVisReg.AddParameter("fit", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+        clsVisReg.SetAssignToOutputObject(strRObjectToAssignTo:="last_graph",
+                                  strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Graph,
+                                  strRObjectFormatToAssignTo:=RObjectFormat.Image,
+                                  strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                  strObjectName:="last_graph")
+
+        'residual plots outputs
+        For Each kvp As KeyValuePair(Of String, RFunction) In dctPlotFunctions
+            kvp.Value.AddParameter("x", strParameterValue:=clsLMOrGLM.GetRObjectToAssignTo(), iPosition:=0)
+            kvp.Value.SetAssignToOutputObject(strRObjectToAssignTo:="last_graph",
+                                        strRObjectTypeLabelToAssignTo:=RObjectTypeLabel.Graph,
+                                        strRObjectFormatToAssignTo:=RObjectFormat.Image,
+                                        strRDataFrameNameToAddObjectTo:=ucrSelectorSimpleReg.strCurrentDataFrame,
+                                        strObjectName:="last_graph")
+        Next
+
+    End Sub
+
     Private Sub SetRCodeForControls(bReset)
         bRCodeSet = False
         ucrReceiverExplanatory.AddAdditionalCodeParameterPair(clsBrokenStickGeneralOperator, New RParameter("x", iNewPosition:=0, bNewIncludeArgumentName:=False), iAdditionalPairNo:=1)
@@ -482,7 +567,7 @@ Public Class dlgTwoVariableFitModel
         ucrSaveModels.AddAdditionalRCode(clsPropTestFunction, iAdditionalPairNo:=11)
         ucrSaveModels.AddAdditionalRCode(clsTtestFunction, iAdditionalPairNo:=12)
         ucrSaveModels.AddAdditionalRCode(clsMcnemarTestFunction, iAdditionalPairNo:=13)
-        ucrSaveModels.AddAdditionalRCode(clsGLM, iAdditionalPairNo:=14)
+        ucrSaveModels.AddAdditionalRCode(clsGLMFunction, iAdditionalPairNo:=14)
         ucrSaveModels.AddAdditionalRCode(clsOnewayTestFunction, iAdditionalPairNo:=15)
         ucrSaveModels.AddAdditionalRCode(clsNumericTtestFunction, iAdditionalPairNo:=16)
         ucrSaveModels.AddAdditionalRCode(clsNumericVarTestFunction, iAdditionalPairNo:=17)
@@ -509,7 +594,9 @@ Public Class dlgTwoVariableFitModel
         ucrInputNullHypothesis.AddAdditionalCodeParameterPair(clsWilcoxTestFunction, New RParameter("mu", iNewPosition:=4), iAdditionalPairNo:=1)
         ucrInputNullHypothesis.SetRCode(clsTtestFunction, bReset)
         'General case controls 
-        ucrSelectorSimpleReg.AddAdditionalCodeParameterPair(clsGLM, ucrSelectorSimpleReg.GetParameter(), 1)
+        ucrSelectorSimpleReg.AddAdditionalCodeParameterPair(clsAOVFunction, ucrSelectorSimpleReg.GetParameter(), 1)
+        ucrSaveModels.AddAdditionalRCode(clsAOVFunction, 1)
+        ucrSelectorSimpleReg.AddAdditionalCodeParameterPair(clsGLMFunction, ucrSelectorSimpleReg.GetParameter(), 1)
         ucrReceiverResponse.SetRCode(clsAsNumeric, bReset)
         ucrReceiverExplanatory.SetRCode(clsTransformFunction, bReset)
         ucrPnlModelType.SetRCode(ucrBase.clsRsyntax.clsBaseFunction, bReset)
@@ -517,6 +604,7 @@ Public Class dlgTwoVariableFitModel
         ucrChkConvertToVariate.SetRCode(clsFormulaOperator)
         ucrSaveModels.SetRCode(clsLM, bReset)
         ucrDistributionChoice.SetRCode(clsFamilyFunction, bReset)
+
         bRCodeSet = True
     End Sub
 
@@ -545,7 +633,6 @@ Public Class dlgTwoVariableFitModel
     Private Sub cmdDisplayOptions_Click(sender As Object, e As EventArgs) Handles cmdDisplayOptions.Click
         sdgSimpleRegOptions.SetRCode(clsNewRSyntax:=ucrBase.clsRsyntax, clsNewFormulaFunction:=clsFormulaFunction, clsNewAnovaFunction:=clsAnovaFunction, clsNewRSummaryFunction:=clsSummaryFunction, clsNewConfint:=clsConfint, clsNewVisReg:=clsVisReg, dctNewPlot:=dctPlotFunctions, clsNewResidualFunction:=clsResidualFunction, clsNewFittedValuesFunction:=clsFittedValuesFunction, clsNewRstandardFunction:=clsRstandardFunction, clsNewHatvaluesFunction:=clsHatvaluesFunction, ucrNewAvailableDatafrane:=ucrSelectorSimpleReg.ucrAvailableDataFrames, bReset:=bResetOptionsSubDialog)
         sdgSimpleRegOptions.ShowDialog()
-        GraphAssignTo()
         bResetOptionsSubDialog = False
     End Sub
 
@@ -573,27 +660,15 @@ Public Class dlgTwoVariableFitModel
         If rdoGeneralCase.Checked Then
             If (ucrDistributionChoice.clsCurrDistribution.strNameTag = "Normal") Then
                 clsLMOrGLM = clsLM
+            ElseIf ucrDistributionChoice.clsCurrDistribution.strNameTag = "Normal_aov" Then
+                clsLMOrGLM = clsAOVFunction
             Else
-                clsLMOrGLM = clsGLM
+                clsLMOrGLM = clsGLMFunction
             End If
             ucrBase.clsRsyntax.AddToAfterCodes(clsAnovaFunction, 1)
             ucrBase.clsRsyntax.AddToAfterCodes(clsSummaryFunction, 2)
             ucrBase.clsRsyntax.SetBaseRFunction(clsLMOrGLM)
-            'Update display functions to contain correct model
-            clsFormulaFunction.AddParameter("x", clsRFunctionParameter:=clsLMOrGLM)
-            clsAnovaFunction.AddParameter("object", clsRFunctionParameter:=clsLMOrGLM)
-            clsSummaryFunction.AddParameter("object", clsRFunctionParameter:=clsLMOrGLM)
-            clsConfint.AddParameter("object", clsRFunctionParameter:=clsLMOrGLM)
-            clsVisReg.AddParameter("fit", clsRFunctionParameter:=clsLMOrGLM)
 
-            For Each kvp As KeyValuePair(Of String, RFunction) In dctPlotFunctions
-                kvp.Value.AddParameter("x", clsRFunctionParameter:=clsLMOrGLM, iPosition:=0)
-            Next
-
-            clsResidualFunction.AddParameter("object", clsRFunctionParameter:=clsLMOrGLM, iPosition:=0)
-            clsFittedValuesFunction.AddParameter("object", clsRFunctionParameter:=clsLMOrGLM, iPosition:=0)
-            clsRstandardFunction.AddParameter("model", clsRFunctionParameter:=clsLMOrGLM, iPosition:=0)
-            clsHatvaluesFunction.AddParameter("model", clsRFunctionParameter:=clsLMOrGLM, iPosition:=0)
         ElseIf rdoTest.Checked Then
             ucrBase.clsRsyntax.RemoveFromAfterCodes(clsAnovaFunction)
             ucrBase.clsRsyntax.RemoveFromAfterCodes(clsSummaryFunction)
@@ -711,15 +786,6 @@ Public Class dlgTwoVariableFitModel
         ReceiverColumnType()
     End Sub
 
-    Private Sub ucrSelectorSimpleReg_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrSelectorSimpleReg.ControlValueChanged
-        GraphAssignTo()
-    End Sub
-
-    'temp fix for graph display problem with RDotNet
-    'correct solution is to have save controls linked to each graph
-    Private Sub GraphAssignTo()
-        clsVisReg.SetAssignTo("last_visreg", strTempDataframe:=ucrSelectorSimpleReg.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempGraph:="last_visreg")
-    End Sub
 
     Private Sub ucrReceiverExplanatory_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrReceiverExplanatory.ControlValueChanged
         If bRCodeSet Then

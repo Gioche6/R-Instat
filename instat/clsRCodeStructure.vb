@@ -38,86 +38,28 @@
 '''             </summary>
 '''--------------------------------------------------------------------------------------------
 Public Class RCodeStructure
-    ''' <summary>   If the output from the R command needs to be assigned, then this string is 
-    '''             the part of the script to the left of the assignment operator ('&lt;-').
-    '''             This could be a data frame, data frame colmun, model, graph, surv or table.
-    '''             If the output from the R command doesn't to be assigned, then this string is
-    '''             empty. </summary>
-    Public strAssignTo As String
 
-    ''' <summary>   The name of the data frame to assign to 
-    '''             (i.e. the data frame name associated with the R "data_name" parameter). 
-    '''             </summary>
-    Public strAssignToDataFrame As String
+    '--------------------------------------------------------------
+    'todo. the properties in this block should eventually be private
+    'start block
 
-    ''' <summary>   The name of the column to assign to
-    '''             (i.e. the column name associated with the R "col_name" or "col_names" 
-    '''             parameters).
-    '''             </summary>
-    Public strAssignToColumn As String
-
-    ''' <summary>   The name of the model to assign to
-    '''             (i.e. the model name associated with the R "model_name" parameter).
-    '''             </summary>
-    Public strAssignToModel As String
-
-    ''' <summary>   The name of the graph to assign to
-    '''             (i.e. the graph name associated with the R "graph_name" parameter).
-    '''             </summary>
-    Public strAssignToGraph As String
-
-    ''' <summary>   The name of the surv to assign to
-    '''             (i.e. the surv name associated with the R "surv_name" parameter).
-    '''             </summary>
-    Public strAssignToSurv As String
-
-    ''' <summary>   The name of the table to assign to
-    '''             (i.e. the table name associated with the R "table_name" parameter).
-    '''             </summary>
-    Public strAssignToTable As String
-
-    ''' <summary>   If true then a list of data frames is assigned (i.e. the R "data_names" 
-    '''             parameter needs to be set).
-    '''             </summary>
-    Public bDataFrameList As Boolean = False
-
-    ''' <summary>   The names of the new data frames (i.e. the data frame names associated with 
-    '''             the R "data_names" parameter). Only used if 'bDataFrameList' is true. 
-    '''             </summary>
-    Public strDataFrameNames As String
-
-    ''' <summary>   If true then, <b>at the current stage</b> of running code within R, the output of
-    '''             the R command needs to be assigned to:
-    ''' <list type="bullet">
-    '''     <item><description>
-    '''                 The variable defined by 'strAssignTo'
-    '''     </description></item><item><description>
-    '''                 R elements such as data frame, columns, graphs, models etc. (only if 
-    '''                 specified by the 'AssignTo...' variables).
-    '''     </description></item>
-    ''' </list>
+    ''' <summary>   
+    ''' If the output from the R command needs to be assigned, then this string is 
+    ''' the part of the script to the left of the assignment operator ('&lt;-').
+    ''' This could be a data frame, data frame colmun, model, graph etc.
+    ''' If the output from the R command doesn't to be assigned, then this string is null or empty. 
     ''' </summary>
-    Public bToBeAssigned As Boolean = False
+    Protected _strAssignToObject As String
+    Protected _strAssignToName As String
+    Protected _strAssignToObjectTypeLabel As String
+    Protected _strAssignToObjectFormat As String
+    Public _strDataFrameNameToAddAssignToObject As String
 
-    ''' <summary>   If true then the output of the R-command has been assigned to:
-    ''' <list type="bullet">
-    '''     <item><description>
-    '''                 The variable defined by 'strAssignTo'
-    '''     </description></item><item><description>
-    '''                 R elements such as data frame, columns, graphs, models etc. (only if 
-    '''                 specified by the 'AssignTo...' variables).
-    '''     </description></item>
-    ''' </list>
-    '''             This variable is only relevant in the string case, as RFunction and
-    '''             ROperator have internal equivalents.
-    '''             <para>
-    '''             Note: Both bToBeAssigned and bIsAssigned are needed. 
-    '''             bToBeAssigned defines if the R command actually needs to be defined.
-    '''             bIsAssigned defines if the R command has already been defined (only relevent 
-    '''             if bToBeAssigned is true).
-    '''             </para>
+    ''' <summary>   
+    ''' If true then a list of data frames is assigned (i.e. the R "_strAssignToName" 
+    ''' parameter needs to be an R string list).
     ''' </summary>
-    Public bIsAssigned As Boolean = False
+    Private _bDataFrameList As Boolean = False
 
     ''' <summary>   If true then the R parameter "use_col_name_as_prefix" is set to true, 
     '''             else the parameter is set to false.
@@ -137,13 +79,16 @@ Public Class RCodeStructure
     ''' <summary>   The name of the column to associate with the R "adjacent_column" parameter.
     '''             Only used when assigning to a column.
     '''             </summary>
-    Public strAdjacentColumn As String = ""
+    Private _strAdjacentColumn As String = ""
 
     ''' <summary>   If true then there is no effect.
     '''             If false then set the R "require_correct_length" parameter to false. 
     '''             Only used when assigning to a column.
     '''             </summary>
     Public bRequireCorrectLength As Boolean = True
+
+    'end block
+    '---------------------------------------------------------------------
 
     ''' <summary>   The list of parameters associated with this R code. </summary>
     Public clsParameters As New List(Of RParameter)
@@ -155,10 +100,9 @@ Public Class RCodeStructure
     '''             Note: This is currently only used in RSyntax as a before/after code to 
     '''             determine whether the position code should be run in the list.
     '''             </summary>
-    Public iPosition = -1 ' TODO SJL 03/04/20 This seems to be a constant, should we declare it with 'const'? 
-    'TODO SJL 03/04/20 - Also, it only seems to be used by RSyntax. Move the constant to that class and give it a less confusing name?
+    Public iPosition = -1
 
-    ''' <summary>   What to do with the result returned by executing the R code: 
+    ''' <summary>Deprecated.  What to do with the result returned by executing the R code: 
     ''' <list type="bullet">
     '''     <item>
     '''        <description>0 Ignore the result of the R code.</description>
@@ -186,21 +130,17 @@ Public Class RCodeStructure
 
     ''' <summary>   If true then potentially exclude the assignment part of the script from the R 
     '''             command.
-    '''             Normally, the assignment part of the script should only be excluded if the 
-    '''             output has already been assigned. 
+    '''             Normally, the assignment part of the script should only be excluded if the assignement 
+    '''             has been set. 
     '''             For example:
     '''             <code>
-    '''                 If bExcludeAssignedFunctionOutput AndAlso bIsAssigned Then
+    '''                 If bExcludeAssignedFunctionOutput AndAlso IsAssigned Then
     '''                     'process script without assignment part
     '''                 Else
     '''                     'process script with assignment part 
     '''             </code>
     '''             </summary>
     Public bExcludeAssignedFunctionOutput As Boolean = True
-
-    ''' <summary>   This is used to clear the global environment of unused variables. 
-    '''             </summary>
-    Public bClearFromGlobal As Boolean = False 'TODO SJL 03/04/20 This variable is never checked or set to true, can we remove?
 
     ''' <summary>   If true then 'clsRFunction.ToScript' and 'clsROperator.ToScript' return a string 
     '''             that can be passed to R (i.e. double quotes are replaced with single quotes, 
@@ -209,29 +149,18 @@ Public Class RCodeStructure
     '''             For example: <c>seq(from = 1, to = 10)</c> becomes <c>"seq(from = 1, to = 10)"</c>.
     '''             </para><para>
     '''             Note: if true then the returned string can no longer be used for the 
-    '''             function or its parameters because it will not produce the correct script
-    '''             (i.e. it should not be true if 'bToBeAssigned' or 'bIsAssigned' is true.</para>
+    '''             function or its parameters because it will not produce the correct script.</para>
     '''             </summary>
     Public bToScriptAsRString As Boolean = False
 
     ''' <summary>   Tag object for any use. </summary>
     Public Tag As Object 'TODO SJL 03/04/20 This only seems to be used by dlgCalculationsSummary. Could we add something local to this dialog and then remove the tag from this calss?
 
-    ''' <summary>   Event queue for all listeners interested in ParametersChanged events. </summary>
-    Public Event ParametersChanged() 'TODO SJL 03/04/20 Is this used? Can it be removed?
-
-    ''' <summary>   Executes the parameters changed action. 
-    '''             </summary>
-    Protected Sub OnParametersChanged()
-        RaiseEvent ParametersChanged()
-        'TODO SJL 03/04/20 Is this still used? Can it be removed?
-        ' Currently only used when this is in RSyntax as a before/after code to determine if 
-        ' position code should be run in the list. This is because RSyntax has iCallType and 
-        ' bExcludeAssignedFunctionOutput which it uses for the base code. Eventually migrate these out of RSyntax.
-    End Sub
 
     '''--------------------------------------------------------------------------------------------
-    ''' <summary>   Sets the 'assignTo' variables. </summary>
+    ''' <summary> Deprecated.   
+    ''' Sets the 'assignTo' variables. 
+    ''' </summary>
     '''
     ''' <param name="strTemp">                      The new value for the assignment string. </param>
     ''' <param name="strTempDataframe">             (Optional) The new value for the dataframe. </param>
@@ -251,36 +180,178 @@ Public Class RCodeStructure
     '''                                             not named. </param>
     ''' <param name="strAdjacentColumn">            (Optional) The new value for strAdjacentColumn. </param>
     '''--------------------------------------------------------------------------------------------
-    Public Sub SetAssignTo(strTemp As String, Optional strTempDataframe As String = "", Optional strTempColumn As String = "", Optional strTempModel As String = "", Optional strTempGraph As String = "", Optional strTempSurv As String = "", Optional strTempTable As String = "", Optional bAssignToIsPrefix As Boolean = False, Optional bAssignToColumnWithoutNames As Boolean = False, Optional bInsertColumnBefore As Boolean = False, Optional bRequireCorrectLength As Boolean = True, Optional bDataFrameList As Boolean = False, Optional strDataFrameNames As String = "", Optional strAdjacentColumn As String = "")
-        strAssignTo = strTemp
+    Public Sub SetAssignTo(strTemp As String,
+                           Optional strTempDataframe As String = "",
+                           Optional strTempColumn As String = "",
+                           Optional strTempModel As String = "",
+                           Optional strTempGraph As String = "",
+                           Optional strTempSurv As String = "",
+                           Optional strTempTable As String = "",
+                           Optional bAssignToIsPrefix As Boolean = False,
+                           Optional bAssignToColumnWithoutNames As Boolean = False,
+                           Optional bInsertColumnBefore As Boolean = False,
+                           Optional bRequireCorrectLength As Boolean = True,
+                           Optional bDataFrameList As Boolean = False,
+                           Optional strDataFrameNames As String = "",
+                           Optional strAdjacentColumn As String = "")
+
+        _strAssignToObject = strTemp
+
+        If Not strTempDataframe = "" AndAlso Not strTempColumn = "" Then
+            SetAssignToColumnObject(strColToAssignTo:=strTemp,
+                                    strColName:=strTempColumn,
+                                    strRDataFrameNameToAddObjectTo:=strTempDataframe,
+                                    bAssignToIsPrefix:=bAssignToIsPrefix,
+                                    bAssignToColumnWithoutNames:=bAssignToColumnWithoutNames,
+                                    bRequireCorrectLength:=bRequireCorrectLength,
+                                    bInsertColumnBefore:=bInsertColumnBefore,
+                                    strAdjacentColumn:=strAdjacentColumn)
+            Return
+        End If
+
+
         If Not strTempDataframe = "" Then
-            strAssignToDataFrame = strTempDataframe
-            If Not strTempColumn = "" Then
-                strAssignToColumn = strTempColumn
+            If bDataFrameList Then
+                SetAssignToDataFrameObject(strDataFrameToAssignTo:=strTemp,
+                                          strDataFrameName:=strDataFrameNames,
+                                           bDataFrameList:=True)
+            Else
+                SetAssignToDataFrameObject(strDataFrameToAssignTo:=strTemp,
+                                           strDataFrameName:=strTempDataframe,
+                                           bDataFrameList:=False)
             End If
+            Return
         End If
-        If Not strTempModel = "" Then
-            strAssignToModel = strTempModel
-        End If
+
+
+        'for dialogs that produce objects shown to the output viewer
+        'using this deprecated subroutine. call the SetAssignToRObject subroutine
+        'this part can be deleted once all the dialogs that have these types of outputs are refactored
+        Dim strNewRObjectTypeToAssignTo As String = ""
+        Dim strNewRObjectTypeLabelToAssignTo As String = ""
+        Dim strNewRObjectFormatToAssignTo As String = ""
+
         If Not strTempGraph = "" Then
-            strAssignToGraph = strTempGraph
+            strNewRObjectTypeToAssignTo = strTempGraph
+            strNewRObjectTypeLabelToAssignTo = RObjectTypeLabel.Graph
+            strNewRObjectFormatToAssignTo = RObjectFormat.Image
         End If
-        If Not strTempSurv = "" Then
-            strAssignToSurv = strTempSurv
+
+        If Not strTempModel = "" Then
+            strNewRObjectTypeToAssignTo = strTempModel
+            strNewRObjectTypeLabelToAssignTo = RObjectTypeLabel.Model
+            'assumption is, by default a model is in text format
+            strNewRObjectFormatToAssignTo = RObjectFormat.Text
         End If
 
         If Not strTempTable = "" Then
-            strAssignToTable = strTempTable
+            strNewRObjectTypeToAssignTo = strTempTable
+            strNewRObjectTypeLabelToAssignTo = RObjectTypeLabel.Table
+            'assumption is, by default a table is in text format
+            strNewRObjectFormatToAssignTo = RObjectFormat.Text
         End If
-        bToBeAssigned = True
-        bIsAssigned = False
+
+        If Not strTempSurv = "" Then
+            strNewRObjectTypeToAssignTo = strTempSurv
+            strNewRObjectTypeLabelToAssignTo = RObjectTypeLabel.StructureLabel
+            'assumption is, by default a survival is in text format
+            strNewRObjectFormatToAssignTo = RObjectFormat.Text
+        End If
+
+        If Not strNewRObjectTypeToAssignTo = "" Then
+            SetAssignToOutputObject(strRObjectToAssignTo:=strNewRObjectTypeToAssignTo,
+                          strRObjectTypeLabelToAssignTo:=strNewRObjectTypeLabelToAssignTo,
+                          strRObjectFormatToAssignTo:=strNewRObjectFormatToAssignTo,
+                          strRDataFrameNameToAddObjectTo:=strTempDataframe,
+                          strObjectName:=strNewRObjectTypeToAssignTo)
+        End If
+
+    End Sub
+
+
+    '''--------------------------------------------------------------------------------------------
+    ''' <summary>
+    ''' Gets the assign to variable
+    ''' </summary>
+    ''' <returns>assign to value</returns>
+    '''--------------------------------------------------------------------------------------------
+    Public Function GetRObjectToAssignTo() As String
+        Return _strAssignToObject
+    End Function
+
+    Public Function IsAssigned()
+        Return Not String.IsNullOrEmpty(_strAssignToObject)
+    End Function
+
+    '''--------------------------------------------------------------------------------------------
+    ''' <summary>
+    ''' Sets the assign to variable for objects that will not be added in the data book and displayed in the output viewer.
+    ''' For instance objects used as input parameters for other R funtions
+    ''' </summary>
+    ''' <param name="strRObjectToAssignTo">The new value for the R object assignment string</param>
+    '''--------------------------------------------------------------------------------------------
+    Public Sub SetAssignToObject(strRObjectToAssignTo As String)
+        _strAssignToObject = strRObjectToAssignTo
+        _strAssignToObjectTypeLabel = ""
+        _strAssignToObjectFormat = ""
+        _strDataFrameNameToAddAssignToObject = ""
+        _strAssignToName = ""
+    End Sub
+
+    '''--------------------------------------------------------------------------------------------
+    ''' <summary>
+    ''' Sets the assign to variables for objects that will be added to the databook and possibly displayed in the output viewer.
+    ''' To prevent the object from being diplayed in the output viewer,
+    ''' set bExcludeAssignedFunctionOutput = False (Not recommended, use the SetAssignToObject subroutine to get similar functionality).
+    ''' </summary>
+    ''' <param name="strRObjectToAssignTo">The new value for the R object assignment string</param>
+    ''' <param name="strRObjectTypeLabelToAssignTo">The new value for the object type label</param>
+    ''' <param name="strRObjectFormatToAssignTo">The new value for the object format</param>
+    ''' <param name="strRDataFrameNameToAddObjectTo">The new value for the data frame name that the object will be added to.</param>
+    ''' <param name="strObjectName">The new value for the object name</param>
+    '''--------------------------------------------------------------------------------------------
+    Public Sub SetAssignToOutputObject(strRObjectToAssignTo As String,
+                                       strRObjectTypeLabelToAssignTo As String,
+                                       strRObjectFormatToAssignTo As String,
+                                       Optional strRDataFrameNameToAddObjectTo As String = "",
+                                       Optional strObjectName As String = "")
+
+        _strAssignToObject = strRObjectToAssignTo
+        _strAssignToObjectTypeLabel = strRObjectTypeLabelToAssignTo
+        _strAssignToObjectFormat = strRObjectFormatToAssignTo
+        _strDataFrameNameToAddAssignToObject = strRDataFrameNameToAddObjectTo
+        _strAssignToName = strObjectName
+    End Sub
+
+    Public Sub SetAssignToColumnObject(strColToAssignTo As String,
+                                 strColName As String,
+                                 strRDataFrameNameToAddObjectTo As String,
+                                 Optional bAssignToIsPrefix As Boolean = False,
+                                 Optional bAssignToColumnWithoutNames As Boolean = False,
+                                 Optional bRequireCorrectLength As Boolean = True,
+                                 Optional bInsertColumnBefore As Boolean = False,
+                                 Optional strAdjacentColumn As String = "")
+
+        _strAssignToObject = strColToAssignTo
+        _strAssignToObjectTypeLabel = RObjectTypeLabel.Column
+        _strDataFrameNameToAddAssignToObject = strRDataFrameNameToAddObjectTo
+        _strAssignToName = strColName
         Me.bAssignToIsPrefix = bAssignToIsPrefix
+
         Me.bAssignToColumnWithoutNames = bAssignToColumnWithoutNames
         Me.bInsertColumnBefore = bInsertColumnBefore
-        Me.strAdjacentColumn = strAdjacentColumn
+        _strAdjacentColumn = strAdjacentColumn
         Me.bRequireCorrectLength = bRequireCorrectLength
-        Me.bDataFrameList = bDataFrameList
-        Me.strDataFrameNames = strDataFrameNames
+    End Sub
+
+    Private Sub SetAssignToDataFrameObject(strDataFrameToAssignTo As String,
+                                          strDataFrameName As String,
+                                          Optional bDataFrameList As Boolean = False)
+
+        _strAssignToObject = strDataFrameToAssignTo
+        _strAssignToObjectTypeLabel = RObjectTypeLabel.Dataframe
+        _strAssignToName = strDataFrameName
+        _bDataFrameList = bDataFrameList
     End Sub
 
     '''--------------------------------------------------------------------------------------------
@@ -291,18 +362,15 @@ Public Class RCodeStructure
     '''--------------------------------------------------------------------------------------------
     Public Sub RemoveAssignTo()
         ' TODO SJL 03/04/20 should bRequireCorrectLength, bDataFrameList, strDataFrameNames also be reset?
-        strAssignTo = ""
-        strAssignToDataFrame = ""
-        strAssignToColumn = ""
-        strAssignToModel = ""
-        strAssignToGraph = ""
-        strAssignToSurv = ""
-        strAssignToTable = ""
-        bToBeAssigned = False
-        bIsAssigned = False
+
         bAssignToIsPrefix = False
         bAssignToColumnWithoutNames = False
         bInsertColumnBefore = False
+
+        _strAssignToObject = ""
+        _strAssignToName = ""
+        _strAssignToObjectTypeLabel = ""
+        _strAssignToObjectFormat = ""
     End Sub
 
     '''--------------------------------------------------------------------------------------------
@@ -347,8 +415,6 @@ Public Class RCodeStructure
     '''             </para><para>
     '''             This function sets the value of several data members. It stores the new 
     '''             assign-to script in 'strAssignTo' (replacing the previous value stored).
-    '''             This function also updates the 'bIsAssigned' and 'bToBeAssigned' flags that
-    '''             store this object's assignment status.
     '''             </para></summary>
     '''
     ''' <param name="strScript">    [in,out] (Optional) The existing script including any 
@@ -365,151 +431,119 @@ Public Class RCodeStructure
     '''             Else returns <paramref name="strTemp"/>. </returns>
     '''--------------------------------------------------------------------------------------------
     Public Overridable Function ToScript(Optional ByRef strScript As String = "", Optional strTemp As String = "") As String
-        Dim clsAddColumns As New RFunction
-        Dim clsGetColumns As New RFunction
-        Dim clsAddData As New RFunction
-        Dim clsGetData As New RFunction
-        Dim clsAddModels As New RFunction
-        Dim clsGetModels As New RFunction
-        Dim clsAddGraphs As New RFunction
-        Dim clsGetGraphs As New RFunction
-        Dim clsAddSurv As New RFunction
-        Dim clsGetSurv As New RFunction
-        Dim clsAddTables As New RFunction
-        Dim clsGetTables As New RFunction
-        Dim clsDataList As New RFunction
-
-        ' if R script already assigned for this object then return the existing assign script
-        If bIsAssigned Then
-            Return (strAssignTo)
-        End If
 
         ' if R script still needs to be assigned to this object
-        If bToBeAssigned Then
+        If Not String.IsNullOrEmpty(_strAssignToObject) Then
+
+            Dim clsAddRObject As New RFunction
+            Dim clsGetRObject As New RFunction
+            Dim strRObject As String = _strAssignToObject
 
             'Append the new script (including the intial assignment part) to 'strScript', e.g. 
             '    'my_stations <- rio::import(file=""C:/myDir/my_stations.csv"", stringsAsFactors=TRUE)" & vbCrLf'
             'Note1: The append allows 'strScript' to be built up into a multi-line string through successive calls of 'ToScript'
             'Note2: Initially, 'strAssignTo' is typically the name of the variable to assign the result of 'strTemp' to, e.g.
             '    'guinea_two_stations'.
-            strScript = strScript & ConstructAssignTo(strAssignTo, strTemp) & Environment.NewLine
 
-            'if we need to assign to a column in a data frame
-            If Not strAssignToDataFrame = "" AndAlso (Not strAssignToColumn = "" OrElse bAssignToColumnWithoutNames) Then
-                clsAddColumns.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$add_columns_to_data")
-                clsAddColumns.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
+            strScript = strScript & ConstructAssignTo(_strAssignToObject, strTemp) & Environment.NewLine
+
+            If _strAssignToObjectTypeLabel = RObjectTypeLabel.Column Then
+                'for column object
+                clsAddRObject.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$add_columns_to_data")
+                clsAddRObject.AddParameter("data_name", Chr(34) & _strDataFrameNameToAddAssignToObject & Chr(34))
                 'if we need to assign to a named column
                 If Not bAssignToColumnWithoutNames Then
-                    clsAddColumns.AddParameter("col_name", Chr(34) & strAssignToColumn & Chr(34))
+                    clsAddRObject.AddParameter("col_name", Chr(34) & _strAssignToName & Chr(34))
                 End If
-                clsAddColumns.AddParameter("col_data", strAssignTo)
+                clsAddRObject.AddParameter("col_data", _strAssignToObject)
                 If bAssignToIsPrefix Then
-                    clsAddColumns.AddParameter("use_col_name_as_prefix", "TRUE")
+                    clsAddRObject.AddParameter("use_col_name_as_prefix", "TRUE")
                 Else
                     If frmMain.clsInstatOptions.bIncludeRDefaultParameters Then
-                        clsAddColumns.AddParameter("use_col_name_as_prefix", "FALSE")
+                        clsAddRObject.AddParameter("use_col_name_as_prefix", "FALSE")
                     End If
                 End If
-                clsAddColumns.AddParameter("before", If(bInsertColumnBefore, "TRUE", "FALSE"))
-                If Not String.IsNullOrEmpty(strAdjacentColumn) Then
-                    clsAddColumns.AddParameter("adjacent_column", strAdjacentColumn)
+                clsAddRObject.AddParameter("before", If(bInsertColumnBefore, "TRUE", "FALSE"))
+                If Not String.IsNullOrEmpty(_strAdjacentColumn) Then
+                    clsAddRObject.AddParameter("adjacent_column", _strAdjacentColumn)
                 End If
                 If Not bRequireCorrectLength Then
-                    clsAddColumns.AddParameter("require_correct_length", "FALSE")
+                    clsAddRObject.AddParameter("require_correct_length", "FALSE")
                 End If
-                ' add '$add-columns_to_data' parameters to 'strScript' 
+                ' add '$add_columns_to_data' parameters to 'strScript' 
                 ' e.g. "row_names1 <- data_book$get_row_names(data_name=""survey"")" & vbCrLf & "data_book$add_columns_to_data(data_name=""survey"", col_name=""row_names1"", col_data=row_names1, before=TRUE)" & vbCrLf
-                strScript = strScript & clsAddColumns.ToScript() & Environment.NewLine
+                strScript = strScript & clsAddRObject.ToScript() & Environment.NewLine
 
-                clsGetColumns.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_columns_from_data")
-                clsGetColumns.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                clsGetColumns.AddParameter("col_names", Chr(34) & strAssignToColumn & Chr(34))
+                'todo. when is this ever used? as of 11/11/2022, this code is not used during execution
+                clsGetRObject.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_columns_from_data")
+                clsGetRObject.AddParameter("data_name", Chr(34) & _strDataFrameNameToAddAssignToObject & Chr(34))
+                clsGetRObject.AddParameter("col_names", Chr(34) & _strAssignToName & Chr(34))
                 ' set 'strAssignTo' to e.g. "data_book$get_columns_from_data(data_name=""survey"", col_names=""row_names1"")"
-                strAssignTo = clsGetColumns.ToScript()
-            ElseIf Not strAssignToModel = "" Then 'else if we need to assign to a model
-                clsAddModels.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$add_model")
-                clsAddModels.AddParameter("model_name", Chr(34) & strAssignToModel & Chr(34))
-                clsAddModels.AddParameter("model", strAssignTo)
-                clsAddModels.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                If Not strAssignToDataFrame = "" Then
-                    clsAddModels.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                    clsGetModels.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                End If
-                strScript = strScript & clsAddModels.ToScript() & Environment.NewLine
+                strRObject = clsGetRObject.ToScript()
 
-                clsGetModels.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_models")
-                clsGetModels.AddParameter("model_name", Chr(34) & strAssignToModel & Chr(34))
-                strAssignTo = clsGetModels.ToScript()
-            ElseIf Not strAssignToGraph = "" Then 'else if we need to assign to a graph
-                clsAddGraphs.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$add_graph")
-                clsAddGraphs.AddParameter("graph_name", Chr(34) & strAssignToGraph & Chr(34))
-                clsAddGraphs.AddParameter("graph", strAssignTo)
-                If Not strAssignToDataFrame = "" Then
-                    clsAddGraphs.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                    clsGetGraphs.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                End If
-                strScript = strScript & clsAddGraphs.ToScript() & Environment.NewLine
+            ElseIf _strAssignToObjectTypeLabel = RObjectTypeLabel.Dataframe Then
+                'for data frame object
+                clsAddRObject.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$import_data")
 
-                clsGetGraphs.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_graphs")
-                clsGetGraphs.AddParameter("graph_name", Chr(34) & strAssignToGraph & Chr(34))
-                strAssignTo = clsGetGraphs.ToScript()
-            ElseIf Not strAssignToSurv = "" Then 'else if we need to assign to a surv
-                clsAddSurv.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$add_surv")
-                clsAddSurv.AddParameter("surv_name", Chr(34) & strAssignToSurv & Chr(34))
-                clsAddSurv.AddParameter("surv", strAssignTo)
-                If Not strAssignToDataFrame = "" Then
-                    clsAddSurv.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                    clsGetSurv.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                End If
-                strScript = strScript & clsAddSurv.ToScript() & Environment.NewLine
-
-                clsGetSurv.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_surv")
-                clsGetSurv.AddParameter("surv_name", Chr(34) & strAssignToSurv & Chr(34))
-                strAssignTo = clsGetSurv.ToScript()
-
-            ElseIf Not strAssignToTable = "" Then 'else if we need to assign to a table
-                clsAddTables.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$add_table")
-                clsAddTables.AddParameter("table_name", Chr(34) & strAssignToTable & Chr(34))
-                clsAddTables.AddParameter("table", strAssignTo)
-                If Not strAssignToDataFrame = "" Then
-                    clsAddTables.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                    clsGetTables.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
-                End If
-                strScript = strScript & clsAddTables.ToScript() & Environment.NewLine
-
-                clsGetTables.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_tables")
-                clsGetTables.AddParameter("table_name", Chr(34) & strAssignToTable & Chr(34))
-                strAssignTo = clsGetTables.ToScript()
-            ElseIf Not strAssignToDataFrame = "" Then 'else if we need to assign to a data frame
-                clsAddData.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$import_data")
-
-                If bDataFrameList Then
-                    clsAddData.AddParameter("data_tables", strAssignTo, iPosition:=0)
-                    If strDataFrameNames <> "" Then
-                        clsAddData.AddParameter("data_names", strDataFrameNames, iPosition:=5)
+                If _bDataFrameList Then
+                    clsAddRObject.AddParameter("data_tables", _strAssignToObject, iPosition:=0)
+                    If _strAssignToName <> "" Then
+                        clsAddRObject.AddParameter("data_names", _strAssignToName, iPosition:=5)
                     End If
                 Else
+                    Dim clsDataList As New RFunction
                     clsDataList.SetRCommand("list")
-                    clsDataList.AddParameter(strAssignToDataFrame, strAssignTo)
-                    clsAddData.AddParameter("data_tables", clsRFunctionParameter:=clsDataList, iPosition:=0)
+                    clsDataList.AddParameter(_strAssignToName, _strAssignToObject)
+                    clsAddRObject.AddParameter("data_tables", clsRFunctionParameter:=clsDataList, iPosition:=0)
                 End If
 
                 'append the next line of script to 'strScript' e.g. 
                 '     "my_stations <- rio::import(file=""C:/myFolder/my_stations.csv"", stringsAsFactors=TRUE)" & vbCrLf 
                 '      & "data_book$import_data(data_tables=list(my_stations=my_stations))" & vbCrLf
-                strScript = strScript & clsAddData.ToScript() & Environment.NewLine
+                strScript = strScript & clsAddRObject.ToScript() & Environment.NewLine
 
-                clsGetData.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_data_frame")
-                clsGetData.AddParameter("data_name", Chr(34) & strAssignToDataFrame & Chr(34))
+                'todo. when is this ever used? as of 11/11/2022, this code is not used during execution
+                clsGetRObject.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_data_frame")
+                clsGetRObject.AddParameter("data_name", Chr(34) & _strAssignToName & Chr(34))
                 'Set 'strAssignTo' to final assign-to script 
                 ' e.g. "data_book$get_columns_from_data(data_name=""my_stations"", col_names=""Calc1"")"
-                strAssignTo = clsGetData.ToScript()
-            End If
-            bIsAssigned = True
-            bToBeAssigned = False
+                strRObject = clsGetRObject.ToScript()
 
-            'return the final assign-to script 
-            Return strAssignTo
+            ElseIf Not String.IsNullOrEmpty(_strAssignToObjectFormat) Then
+                'for output objects like graphs, texts, table
+                'set the R command and parameters for the add object R function. This is used for adding the object in the data book
+                'set the R command and parameters for the get object R function. This is used for viewing the object.
+                clsAddRObject.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$add_object")
+                clsGetRObject.SetRCommand(frmMain.clsRLink.strInstatDataObject & "$get_object_data")
+
+                If Not String.IsNullOrEmpty(_strDataFrameNameToAddAssignToObject) Then
+                    clsAddRObject.AddParameter("data_name", Chr(34) & _strDataFrameNameToAddAssignToObject & Chr(34))
+                    clsGetRObject.AddParameter("data_name", Chr(34) & _strDataFrameNameToAddAssignToObject & Chr(34))
+                End If
+
+                clsGetRObject.AddParameter("object_name", Chr(34) & _strAssignToName & Chr(34))
+                clsGetRObject.AddParameter("as_file", "TRUE")
+
+                clsAddRObject.AddParameter("object_name", Chr(34) & _strAssignToName & Chr(34))
+                clsAddRObject.AddParameter("object_type_label", Chr(34) & _strAssignToObjectTypeLabel & Chr(34))
+                clsAddRObject.AddParameter("object_format", Chr(34) & _strAssignToObjectFormat & Chr(34))
+
+                If _strAssignToObjectTypeLabel = RObjectTypeLabel.Graph Then
+                    Dim clsCheckGraphRFunction As New RFunction
+                    clsCheckGraphRFunction.SetRCommand("check_graph")
+                    clsCheckGraphRFunction.AddParameter("graph_object", _strAssignToObject)
+                    clsAddRObject.AddParameter("object", clsRFunctionParameter:=clsCheckGraphRFunction)
+                Else
+                    clsAddRObject.AddParameter("object", strParameterValue:=_strAssignToObject)
+                End If
+
+                'construct the scripts 
+                strScript = strScript & clsAddRObject.ToScript() & Environment.NewLine
+                strRObject = clsGetRObject.ToScript()
+
+            End If
+
+            Return strRObject
         Else 'else if R script doesn't need to be assigned to this object
             ' just return the right side of the assignment
             Return strTemp
@@ -534,6 +568,7 @@ Public Class RCodeStructure
     ''' <returns>   The constructed assignment statement. </returns>
     '''--------------------------------------------------------------------------------------------
     Private Function ConstructAssignTo(strAssignTo As String, strTemp As String) As String
+        'todo. Use the R script library or move this function to a module
         Dim strReconstructed As String = ""
         Dim arrScriptParts As String()
         If Not String.IsNullOrEmpty(strTemp) Then
@@ -616,33 +651,6 @@ Public Class RCodeStructure
     End Sub
 
     '''--------------------------------------------------------------------------------------------
-    ''' <summary>   TODO SJL 03/04/20 This function is not used, and is not overridden by any child classes. Can we remove?
-    '''             </summary>
-    '''
-    ''' <param name="strParameterName">     (Optional) Name of the parameter. </param>
-    ''' <param name="strParameterValue">    (Optional) The parameter value. </param>
-    ''' <param name="clsRCodeObject">       (Optional) The R code structure parameter. </param>
-    ''' <param name="bIncludeArgumentName"> (Optional) True to include, false to exclude the argument
-    '''                                     name. </param>
-    ''' <param name="iPosition">            (Optional) (Optional) The relative position of the
-    '''                                     parameter in this object's parameter list. </param>
-    '''--------------------------------------------------------------------------------------------
-    Public Overridable Sub AddParameterWithCodeStructure(Optional strParameterName As String = "", Optional strParameterValue As String = "", Optional clsRCodeObject As RCodeStructure = Nothing, Optional bIncludeArgumentName As Boolean = True, Optional iPosition As Integer = -1)
-        ' TODO Legacy - This should be call AddParameter but need to make it unambiguous with above. 
-        ' TODO SJL 03/04/20 I think this function has a bug: If strParameterValue is specified then the
-        ' clsRFunctionParameter and clsROperatorParameter parameters will be ignored.
-        If TypeOf (clsRCodeObject) Is RFunction Then
-            AddParameter(strParameterName:=strParameterName, strParameterValue:=strParameterValue,
-                         clsRFunctionParameter:=clsRCodeObject, bIncludeArgumentName:=bIncludeArgumentName,
-                         iPosition:=iPosition)
-        ElseIf TypeOf (clsRCodeObject) Is ROperator Then
-            AddParameter(strParameterName:=strParameterName, strParameterValue:=strParameterValue,
-                         clsROperatorParameter:=clsRCodeObject, bIncludeArgumentName:=bIncludeArgumentName,
-                         iPosition:=iPosition)
-        End If
-    End Sub
-
-    '''--------------------------------------------------------------------------------------------
     ''' <summary>   If the object already has a parameter with the same name then changes the 
     '''             parameter's value to the value in <paramref name="clsNewParam"/>.
     '''             Else adds <paramref name="clsNewParam"/> to the object as a new parameter.
@@ -691,9 +699,8 @@ Public Class RCodeStructure
         Else
             'TODO SJL 03/04/20 Do something here?
         End If
-        bIsAssigned = False 'parameters have changed so the output of the R command needs to be reassigned
+        'bIsAssigned = False 'parameters have changed so the output of the R command needs to be reassigned
         iNumberOfAddedParameters = iNumberOfAddedParameters + 1
-        OnParametersChanged() 'TODO SJL 03/04/20 can this line be removed?
     End Sub
 
     '''--------------------------------------------------------------------------------------------
@@ -744,7 +751,9 @@ Public Class RCodeStructure
         End If
     End Sub
 
+    '''--------------------------------------------------------------------------------------------
     ''' <summary>   Sorts the parameters into position order. </summary>
+    '''--------------------------------------------------------------------------------------------
     Public Sub SortParameters()
         'This sub is used to reorder the parameters according to their Position property.
         'It will be called only in places where it is necessary ie before ToScript or RemoveAdditionalParameters in ROperator.
@@ -781,21 +790,6 @@ Public Class RCodeStructure
         End If
     End Function
 
-    ''' <summary>   Removes all parameters that do not have a specified position 
-    '''             (i.e. parameter's position is -1).
-    '''             </summary>
-    Public Sub RemoveUnorderedParameters()
-        'TODO SJL 03/04/20 This function is not used, remove it?
-        Dim clsParam As RParameter
-        'TODO SJL 03/04/20 This function only seems to remove the first unordered param, is this a bug?
-        If Not clsParameters Is Nothing Then
-            clsParam = clsParameters.Find(Function(x) x.Position = -1)
-            clsParameters.Remove(clsParam)
-        End If
-        bIsAssigned = False 'parameters have changed so the output of the R command needs to be reassigned
-        OnParametersChanged() 'TODO SJL 03/04/20 can this line be removed?
-    End Sub
-
     '''--------------------------------------------------------------------------------------------
     ''' <summary>   Removes the parameter named <paramref name="strArgName"/>. </summary>
     '''
@@ -812,8 +806,6 @@ Public Class RCodeStructure
             clsParam = clsParameters.Find(Function(x) x.strArgumentName = strArgName)
             clsParameters.Remove(clsParam) '
         End If
-        bIsAssigned = False 'parameters have changed so the output of the R command needs to be reassigned
-        OnParametersChanged() 'TODO SJL 03/04/20 can this line be removed?
     End Sub
 
     '''--------------------------------------------------------------------------------------------
@@ -832,8 +824,6 @@ Public Class RCodeStructure
             clsParam = clsParameters.Find(Function(x) x.Position = iPosition)
             clsParameters.Remove(clsParam)
         End If
-        bIsAssigned = False 'parameters have changed so the output of the R command needs to be reassigned
-        OnParametersChanged() 'TODO SJL 03/04/20 can this line be removed?
     End Sub
 
     '''--------------------------------------------------------------------------------------------
@@ -846,8 +836,6 @@ Public Class RCodeStructure
         If Not clsParameters Is Nothing Then
             clsParameters.Remove(clsParam)
         End If
-        bIsAssigned = False 'parameters have changed so the output of the R command needs to be reassigned
-        OnParametersChanged() 'TODO SJL 03/04/20 can this line be removed?
     End Sub
 
     '''--------------------------------------------------------------------------------------------
@@ -876,22 +864,20 @@ Public Class RCodeStructure
 
     ''' <summary>   Clears this object to its blank/initial state. </summary>
     Public Overridable Sub Clear()
-        'TODO legacy  tidy up iPosition 
         iPosition = -1
         iCallType = 0
         bExcludeAssignedFunctionOutput = True
-        bClearFromGlobal = False
         bToScriptAsRString = False
         RemoveAssignTo()
         ClearParameters()
     End Sub
 
+    '''--------------------------------------------------------------------------------------------
     ''' <summary>   Clears the parameters. </summary>
+    '''--------------------------------------------------------------------------------------------
     Public Overridable Sub ClearParameters()
         clsParameters.Clear()
         iNumberOfAddedParameters = 0
-        bIsAssigned = False
-        OnParametersChanged() 'TODO SJL 03/04/20 can this line be removed?
     End Sub
 
     '''--------------------------------------------------------------------------------------------
@@ -903,17 +889,13 @@ Public Class RCodeStructure
         Dim clsTempCode As New RCodeStructure
         Dim clsRParam As RParameter
 
-        clsTempCode.strAssignTo = strAssignTo
-        clsTempCode.strAssignToDataFrame = strAssignToDataFrame
-        clsTempCode.strAssignToColumn = strAssignToColumn
-        clsTempCode.strAssignToModel = strAssignToModel
-        clsTempCode.strAssignToGraph = strAssignToGraph
-        clsTempCode.strAssignToSurv = strAssignToSurv
-        clsTempCode.strAssignToTable = strAssignToTable
-        clsTempCode.bDataFrameList = bDataFrameList
-        clsTempCode.strDataFrameNames = strDataFrameNames
-        clsTempCode.bToBeAssigned = bToBeAssigned
-        clsTempCode.bIsAssigned = bIsAssigned
+        clsTempCode._strAssignToObject = _strAssignToObject
+        clsTempCode._strAssignToName = _strAssignToName
+        clsTempCode._strAssignToObjectTypeLabel = _strAssignToObjectTypeLabel
+        clsTempCode._strAssignToObjectFormat = _strAssignToObjectFormat
+        clsTempCode._strDataFrameNameToAddAssignToObject = _strDataFrameNameToAddAssignToObject
+
+        clsTempCode._bDataFrameList = _bDataFrameList
         clsTempCode.bAssignToIsPrefix = bAssignToIsPrefix
         clsTempCode.bAssignToColumnWithoutNames = bAssignToColumnWithoutNames
         clsTempCode.bInsertColumnBefore = bInsertColumnBefore
@@ -921,7 +903,6 @@ Public Class RCodeStructure
         clsTempCode.iPosition = iPosition
         clsTempCode.iCallType = iCallType
         clsTempCode.bExcludeAssignedFunctionOutput = bExcludeAssignedFunctionOutput
-        clsTempCode.bClearFromGlobal = bClearFromGlobal
         clsTempCode.bToScriptAsRString = bToScriptAsRString
         clsTempCode.Tag = Tag
         For Each clsRParam In clsParameters
@@ -945,10 +926,10 @@ Public Class RCodeStructure
         'TBD SJL 06/04/20 This is a 'get' function but it does not return any value! Rename?
         SortParameters()
         ' if this object is to be assigned, but is not yet in the lists
-        If bToBeAssigned AndAlso Not lstCodes.Contains(Me) Then
+        If Not String.IsNullOrEmpty(_strAssignToObject) AndAlso Not lstCodes.Contains(Me) Then
             'add this object and its assign script to the respective lists
             lstCodes.Add(Me)
-            lstValues.Add(strAssignTo)
+            lstValues.Add(_strAssignToObject)
         End If
         For Each clsTempParam As RParameter In clsParameters
             ' if parameter is a function or operator then also add its respective RCodeStructure

@@ -22,6 +22,7 @@ Imports RDotNet
 Public Class clsDataBook
     Private _RLink As RLink
     Private _lstDataFrames As List(Of clsDataFrame)
+    Private _lstAllDataFrames As New List(Of clsDataFrame)
     Private _clsDataFrameMetaData As clsDataFrameMetaData
 
     ''' <summary>
@@ -95,6 +96,10 @@ Public Class clsDataBook
         Return _lstDataFrames.Where(Function(x) x.strName = strName).FirstOrDefault
     End Function
 
+    Public Function GetAllDataFrame(strName As String) As clsDataFrame
+        Return _lstAllDataFrames.Where(Function(x) x.strName = strName).FirstOrDefault
+    End Function
+
     ''' <summary>
     ''' Gets the Column Metadata for the dataframe name given
     ''' </summary>
@@ -112,13 +117,11 @@ Public Class clsDataBook
         'and refresh the data frame metadata from R
         If Not _RLink.bInstatObjectExists Then
             _lstDataFrames.Clear()
+            _lstAllDataFrames.Clear()
             _clsDataFrameMetaData = New clsDataFrameMetaData(_RLink)
-            Exit Sub
-        End If
-
-        'else if the R Instat object data has changed
-        'refresh data frames data and metadata 
-        If HasDataChanged() Then
+        ElseIf HasDataChanged() Then
+            'else if the R Instat object data has changed
+            'refresh data frames data and metadata 
             RefreshDataFrames()
             _clsDataFrameMetaData.RefreshData()
         End If
@@ -130,6 +133,13 @@ Public Class clsDataBook
     Private Sub RefreshDataFrames()
         'get the recent list of data frame names from R Instant
         Dim lstOfCurrentRDataFrameNames As List(Of String) = GetDataFrameNamesFromR()
+
+        'add any data frames from this data book before removing them if not the R Instat object
+        For Each clsDataframe In _lstDataFrames
+            If Not _lstAllDataFrames.Contains(clsDataframe) Then
+                _lstAllDataFrames.Add(clsDataframe)
+            End If
+        Next
 
         'remove any data frames from this data book that are not in the R Instat object
         _lstDataFrames.RemoveAll(Function(x) Not lstOfCurrentRDataFrameNames.Contains(x.strName))
@@ -145,11 +155,10 @@ Public Class clsDataBook
             End If
             'if data not refreshed successfully, remove the data frame from the data book
             If Not dataFrame.RefreshData() Then
-                MessageBox.Show("Error: Could not retrieve data frame:" & strDataFrameName & " from R" &
-                                Environment.NewLine & "Data displayed in spreadsheet may not be up to date." &
-                                Environment.NewLine & "We strongly suggest restarting R-Instat before continuing.",
+                MessageBox.Show("Error: Sorry R-Instat can not retrieve the: " & strDataFrameName & " data from R.",
                                 "Cannot retrieve data", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 _lstDataFrames.Remove(dataFrame)
+                DeleteDataFrames(strDataFrameName)
             End If
         Next
         If lstOfCurrentRDataFrameNames.Count = _lstDataFrames.Count Then
@@ -178,6 +187,13 @@ Public Class clsDataBook
         End If
         Return listOfDataFrames
     End Function
+
+    Private Sub DeleteDataFrames(strDataName As String)
+        Dim clsDeleteFunction As New RFunction
+        clsDeleteFunction.SetRCommand(_RLink.strInstatDataObject & "$delete_dataframes")
+        clsDeleteFunction.AddParameter("data_names", Chr(34) & strDataName & Chr(34))
+        _RLink.RunScript(clsDeleteFunction.ToScript(), strComment:="Delete DataFrame(s)")
+    End Sub
 
 End Class
 

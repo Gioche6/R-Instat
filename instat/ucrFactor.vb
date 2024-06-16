@@ -137,10 +137,23 @@ Public Class ucrFactor
         Public Const SelectorColumn As String = "Select"
     End Structure
 
+    Private Property SelectionControlsVisible As Boolean
+        Get
+            Return Me.Controls.Contains(pnlSelectOptions)
+        End Get
+        Set(value As Boolean)
+            If Not value Then
+                Me.Controls.Remove(pnlSelectOptions)
+            ElseIf Not Me.Controls.Contains(pnlSelectOptions) Then
+                Me.Controls.Add(pnlSelectOptions)
+            End If
+        End Set
+    End Property
 
     Private Sub ucrFactor_Load(sender As Object, e As EventArgs) Handles Me.Load
         'the grid will always have 1 sheet. So no need to display the sheet tab control
         grdFactorData.SetSettings(unvell.ReoGrid.WorkbookSettings.View_ShowSheetTabControl, False)
+        lblSelected.ForeColor = Color.Red
     End Sub
 
     Private Sub _ucrLinkedReceiver_ControlValueChanged(ucrChangedControl As ucrCore) Handles _ucrLinkedReceiver.ControlValueChanged
@@ -176,15 +189,15 @@ Public Class ucrFactor
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
-    Private Sub _grdSheet_AfterCellEdit(sender As Object, e As CellAfterEditEventArgs) Handles _grdSheet.AfterCellEdit
+    Private Sub _grdSheet_CellEditTextChanging(sender As Object, e As CellEditTextChangingEventArgs) Handles _grdSheet.CellEditTextChanging
 
         Dim bValid As Boolean = True
         'do levels entry validation
         If _grdSheet.ColumnHeaders(e.Cell.Column).Text = DefaultColumnNames.Level Then
-            If Not IsNumeric(e.NewData) Then
+            If Not IsNumeric(e.Text) Then
                 MsgBox("Levels must be numeric values", MsgBoxStyle.Information, "Invalid Value")
                 bValid = False
-            ElseIf e.NewData.Contains(".") Then
+            ElseIf e.Text.Contains(".") Then
                 MsgBox("Levels must not be decimal", MsgBoxStyle.Information, "Invalid Value")
 
                 bValid = False
@@ -194,13 +207,13 @@ Public Class ucrFactor
         If bValid Then
             'set the new data before calling OnControlValueChanged
             'very important especially when writing to the parameter value
-            _grdSheet(e.Cell.Row, e.Cell.Column) = e.NewData
+            _grdSheet(e.Cell.Row, e.Cell.Column) = e.Text
             'this will raise ControlContentsChanged event
             'and also update parameter and R code with the values
             OnControlValueChanged()
             e.Cell.Style.BackColor = Color.Gold
         Else
-            e.EndReason = EndEditReason.Cancel
+        'Todo what will happen if the text is not valid
         End If
 
     End Sub
@@ -226,6 +239,9 @@ Public Class ucrFactor
 
         _enumControlState = enumControlState
         _ucrLinkedReceiver = ucrLinkedReceiver
+
+        'for normal grid, which means no selection, remove the selection controls
+        SelectionControlsVisible = _enumControlState <> ControlStates.NormalGrid
 
         'if nothing then just initialise with empty collections
         _dctParamAndColNames = If(dctParamAndColNames, New Dictionary(Of String, String))
@@ -596,11 +612,13 @@ Public Class ucrFactor
     End Function
 
     Private Function GetColumnIndex(grdSheet As unvell.ReoGrid.Worksheet, strColName As String) As Integer
-        For i As Integer = 0 To grdSheet.Columns - 1
-            If grdSheet.ColumnHeaders(i).Text = strColName Then
-                Return i
-            End If
-        Next
+        If grdSheet IsNot Nothing Then
+            For i As Integer = 0 To grdSheet.Columns - 1
+                If grdSheet.ColumnHeaders(i).Text = strColName Then
+                    Return i
+                End If
+            Next
+        End If
         Return -1
     End Function
 
@@ -707,6 +725,20 @@ Public Class ucrFactor
             End If
         Next
         Return False
+    End Function
+
+    Private Function CountRowSelected() As Integer
+        If _grdSheet Is Nothing OrElse _enumControlState = ControlStates.NormalGrid Then
+            Return False
+        End If
+        Dim iSelectorColumnIndex As Integer = GetColumnIndex(_grdSheet, DefaultColumnNames.SelectorColumn)
+        Dim iCount As Integer = 0
+        For i = 0 To _grdSheet.Rows - 1
+            If DirectCast(_grdSheet(i, iSelectorColumnIndex), Boolean) Then
+                iCount += 1
+            End If
+        Next
+        Return iCount
     End Function
 
     ''' <summary>
@@ -881,6 +913,28 @@ Public Class ucrFactor
                 End If
                 SetCellValues(_grdSheet, iValueColIndex, arrCellValues, False)
         End Select
+    End Sub
+
+    Private Sub btnSelectAll_Click(sender As Object, e As EventArgs) Handles btnSelectAll.Click
+        SelectAllGridRows(Not IsAllGridRowsSelected())
+    End Sub
+
+    Private Sub SetToggleButtonSettings()
+        If IsAllGridRowsSelected() Then
+            btnSelectAll.Text = Translations.GetTranslation("Deselect All")
+            btnSelectAll.FlatStyle = FlatStyle.Flat
+        Else
+            btnSelectAll.Text = Translations.GetTranslation("Select All")
+            btnSelectAll.FlatStyle = FlatStyle.Popup
+        End If
+    End Sub
+
+    Private Sub SetColumnsSelected(ucrChangedControl As ucrCore) Handles Me.ControlValueChanged
+        Dim iSelectCol As Integer = CountRowSelected()
+
+        lblSelected.Text = "Selected:" & iSelectCol
+        lblSelected.Visible = iSelectCol > 0
+        SetToggleButtonSettings()
     End Sub
 
 End Class

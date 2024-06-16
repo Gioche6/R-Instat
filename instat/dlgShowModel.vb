@@ -182,16 +182,31 @@ Public Class dlgShowModel
     Private Sub SwitchBetweenSaveGraphOrColumn()
         clsPipeOperator.RemoveAssignTo()
         If rdoValues.Checked AndAlso ucrReceiverProbabilitiesOrValues.Visible Then
-            ucrBase.clsRsyntax.iCallType = 0
-            clsPipeOperator.SetAssignTo(ucrSaveNewColumn.GetText(), strTempDataframe:=ucrSelectorShowModel.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempColumn:=ucrSaveNewColumn.GetText)
+            clsPipeOperator.SetAssignToColumnObject(ucrSaveNewColumn.GetText(),
+                                                    ucrSaveNewColumn.GetText,
+                                                    ucrSelectorShowModel.strCurrentDataFrame,
+                                                    bAssignToIsPrefix:=True)
+
         ElseIf rdoGraph.Checked AndAlso ucrSaveGraph.ucrChkSave.Checked Then
-            ucrBase.clsRsyntax.iCallType = 3
-            clsPipeOperator.SetAssignTo(ucrSaveGraph.GetText(), strTempDataframe:=ucrSelectorShowModel.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempGraph:=ucrSaveGraph.GetText)
+            clsPipeOperator.SetAssignToOutputObject(ucrSaveGraph.GetText(),
+                                                    RObjectTypeLabel.Graph,
+                                                    RObjectFormat.Image,
+                                                    ucrSelectorShowModel.strCurrentDataFrame,
+                                                    ucrSaveGraph.GetText())
+
         ElseIf rdoGraph.Checked AndAlso Not ucrSaveGraph.ucrChkSave.Checked Then
-            ucrBase.clsRsyntax.iCallType = 3
-            clsPipeOperator.SetAssignTo("last_graph", strTempDataframe:=ucrSelectorShowModel.ucrAvailableDataFrames.cboAvailableDataFrames.Text, strTempGraph:="last_graph", bAssignToIsPrefix:=True)
+            clsPipeOperator.SetAssignToOutputObject("last_graph",
+                                                   RObjectTypeLabel.Graph,
+                                                   RObjectFormat.Image,
+                                                   ucrSelectorShowModel.strCurrentDataFrame,
+                                                   "last_graph")
+
         Else
-            ucrBase.clsRsyntax.iCallType = 2
+            clsPipeOperator.SetAssignToOutputObject("last_summary",
+                                                  RObjectTypeLabel.Summary,
+                                                  RObjectFormat.Text,
+                                                  ucrSelectorShowModel.strCurrentDataFrame,
+                                                  "last_summary")
         End If
     End Sub
 
@@ -253,8 +268,8 @@ Public Class dlgShowModel
             clsProbabilitiesFunction.AddParameter("return", Chr(34) & "plot" & Chr(34), iPosition:=9)
         ElseIf rdoValues.Checked Then
             cmdDistributionOptions.Enabled = False
-            ucrBase.clsRsyntax.RemoveOperatorParameter("1")
-            ucrBase.clsRsyntax.RemoveOperatorParameter("2")
+            ucrBase.clsRsyntax.clsBaseOperator.RemoveParameterByName("1")
+            ucrBase.clsRsyntax.clsBaseOperator.RemoveParameterByName("2")
             clsQuantilesFunction.AddParameter("return", Chr(34) & "values" & Chr(34), iPosition:=9)
             clsProbabilitiesFunction.AddParameter("return", Chr(34) & "values" & Chr(34), iPosition:=9)
         End If

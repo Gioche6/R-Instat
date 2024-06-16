@@ -31,10 +31,10 @@ Public Class dlgDeleteDataFrames
             SetDefaults()
         End If
         ReopenDialog()
+        SetRCodeForControls(bReset)
         If bUseSelectedDataFrame Then
             SetDefaultDataFrame()
         End If
-        SetRCodeForControls(bReset)
         bReset = False
         TestOKEnabled()
         autoTranslate(Me)
@@ -49,6 +49,8 @@ Public Class dlgDeleteDataFrames
         ucrReceiverDataFrames.SetMeAsReceiver()
         ucrReceiverDataFrames.SetItemType("dataframe")
         ucrReceiverDataFrames.strSelectorHeading = "Data Frames"
+
+        lblDeleteNumber.ForeColor = Color.Red
     End Sub
 
     Private Sub SetDefaults()
@@ -61,7 +63,7 @@ Public Class dlgDeleteDataFrames
     End Sub
 
     Private Sub SetRCodeForControls(bReset As Boolean)
-        SetRCode(Me, ucrBase.clsRsyntax.clsBaseFunction, bReset)
+        ucrReceiverDataFrames.SetRCode(ucrBase.clsRsyntax.clsBaseFunction, bReset)
     End Sub
 
     Private Sub TestOKEnabled()

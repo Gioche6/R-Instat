@@ -94,12 +94,13 @@ Public Class ucrTry
             ElseIf IsNothing(ucrReceiverScript) AndAlso CheckForEmptyInputControl() Then
                 ucrInputTryMessage.SetName("")
             Else
-                For Each clsTempCode In clsRSyntax.lstBeforeCodes
+                For Each clsTempCode In clsRSyntax.GetBeforeCodes()
                     Dim clsCodeClone As RCodeStructure = clsTempCode.Clone()
                     Dim strBeforeAfterScript As String = ""
                     Dim strBeforeAfterTemp As String = clsCodeClone.ToScript(strBeforeAfterScript)
-                    'Sometimes the output of the R-command we deal with should not be part of the script... That's only the case when this output has already been assigned.
-                    If clsCodeClone.bExcludeAssignedFunctionOutput AndAlso clsCodeClone.bIsAssigned Then
+                    'Sometimes the output of the R-command we deal with should not be part of the script...
+                    'That's only the case when this output has already been assigned.
+                    If clsCodeClone.bExcludeAssignedFunctionOutput AndAlso clsCodeClone.IsAssigned() Then
                         lstScripts.Add(strBeforeAfterScript)
                     Else
                         lstScripts.Add(strBeforeAfterScript & strBeforeAfterTemp)
@@ -151,21 +152,21 @@ Public Class ucrTry
                             ucrInputTryMessage.txtInput.BackColor = Color.White
                         Else
                             If bIsCommand Then
-                                ucrInputTryMessage.SetName(CommandModel & " runs without error")
+                                ucrInputTryMessage.SetName(Translations.GetTranslation(CommandModel & " runs without error"))
                                 ucrInputTryMessage.txtInput.BackColor = Color.LightGreen
                             ElseIf bIsModel Then
-                                ucrInputTryMessage.SetName(CommandModel & " runs ok")
+                                ucrInputTryMessage.SetName(Translations.GetTranslation(CommandModel & " runs ok"))
                                 ucrInputTryMessage.txtInput.BackColor = Color.LightGreen
                             End If
                         End If
                     Else
                         If bIsCommand Then
-                            ucrInputTryMessage.SetName(CommandModel & " produced an error or no output to display.")
+                            ucrInputTryMessage.SetName(Translations.GetTranslation(CommandModel & " produced an error or no output to display."))
                             ucrInputTryMessage.txtInput.BackColor = Color.LightCoral
                             strError = strErrorDetail
                             AddButtonInTryTextBox()
                         ElseIf bIsModel Then
-                            ucrInputTryMessage.SetName("Problem detected running " & CommandModel & " or no output to display.")
+                            ucrInputTryMessage.SetName(Translations.GetTranslation("Problem detected running " & CommandModel & " or no output to display."))
                             ucrInputTryMessage.txtInput.BackColor = Color.LightCoral
                             strError = strErrorDetail
                             AddButtonInTryTextBox()
@@ -174,18 +175,18 @@ Public Class ucrTry
                     End If
             End If
         Catch ex As Exception
-            ucrInputTryMessage.SetName(CommandModel & "produced an error. Modify input before running.")
+            ucrInputTryMessage.SetName(Translations.GetTranslation(CommandModel & " produced an error. Modify input before running."))
             strError = strErrorDetail
             ucrInputTryMessage.txtInput.BackColor = Color.LightCoral
             AddButtonInTryTextBox()
         Finally
             lstScripts = New List(Of String)
-            For Each clsTempCode In clsRSyntax.lstAfterCodes
+            For Each clsTempCode In clsRSyntax.GetAfterCodes()
                 Dim clsCodeClone As RCodeStructure = clsTempCode.Clone()
                 Dim strBeforeAfterScript As String = ""
                 Dim strBeforeAfterTemp As String = clsCodeClone.ToScript(strBeforeAfterScript)
-                'Sometimes the output of the R-command we deal with should not be part of the script... That's only the case when this output has already been assigned.
-                If clsCodeClone.bExcludeAssignedFunctionOutput AndAlso clsCodeClone.bIsAssigned Then
+                'Sometimes the output of the R-command we deal with should not be part of the script... 
+                If clsCodeClone.bExcludeAssignedFunctionOutput Then
                     lstScripts.Add(strBeforeAfterScript)
                 Else
                     lstScripts.Add(strBeforeAfterScript & strBeforeAfterTemp)

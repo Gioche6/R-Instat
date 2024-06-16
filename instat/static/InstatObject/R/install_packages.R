@@ -130,11 +130,58 @@ pkgs <-
     # For most frequent values in Prepare > Column:Numeric > Row Summaries
     "statip",
     # also install mmtable2 from GitHub devtools::install_github("ianmoran11/mmtable2")
+    # install.packages('remotes')
+    # also install aida-package from GitHub remotes::install_github('michael-franke/aida-package')
+    # also install CDT from GitHub devtools::install_github("rijaf-iri/CDT")
     "corrr",
-    "dslabs"
-  )
+    "dslabs",
+    "coin",
+    #This small library contains a series of simple tools for constructing and manipulating confounded and fractional factorial designs.
+    "conf.design",
+    "pingr",
+    "vcdExtra",
+    # For inspect, read, edit and run files for 'APSIM'
+    "apsimx",
+    #Fast functions for dealing with prime numbers, such as testing whether a number is prime and generating a sequence prime numbers.
+    "primes",
+    #Generates well-known integer sequences. 'gmp' package is adopted for computing with arbitrarily large numbers.
+    "Zseq",
+    # Extending 'gt' for Beautiful HTML Tables.
+    "gtExtras",
+    "segmented", 
+    # Utilities for verifying discrete, continuous and probabilistic forecasts, and forecasts expressed as parametric distributions are included.
+    "verification",
+    "prediction",
+    # Tutorial Analysis of Some Agricultural Experiments. 
+    "agriTutorial", 
+    "arm", 
+    "rstanarm", 
+    "statsr",
+    "statquotes",
+    # Statistical Analysis and Data Display: Heiberger and Holland
+    "HH",
+    #Datasets from the Datasaurus Dozen
+    "datasauRus",
+    "desplot",
+    #applying formatting on vectors and data frames to make data presentation easier, richer, more flexible and hopefully convey more information
+    "formattable",
+    #A 'ggplot2' extension that allows text to follow curved paths.
+    "geomtextpath",
+    "moderndive",
+    # Data Sets Useful for Modeling Examples
+    "modeldata",
+    # Data for an Introduction to Statistical Learning with Applications in R
+    "ISLR",
+    #Create Waffle Chart Visualizations
+    "waffle",
+    # Data and Code Behind the Stories and Interactives at 'FiveThirtyEight'
+    "fivethirtyeight",
+    "CGPfunctions",
+    "ggside",
+    "collapse"
+ )
 pkgList <- pkgDep(pkgs, type="win.binary", repos = "https://cran.rstudio.com/", suggests = FALSE, includeBasePkgs = FALSE, Rversion = r_version)
-pth <- "C:/Users/Christopher Marsh/Documents/RPackages"
+pth <- "C:/Users/Antoine/Documents/RPackages"
 makeRepo(pkgList, path = pth, type = "win.binary", Rversion = r_version, repos = "https://cran.rstudio.com/")
 
 #add extra packages to location

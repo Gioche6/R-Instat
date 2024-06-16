@@ -25,13 +25,51 @@ Public Class clsRegressionDefaults
         End Get
     End Property
 
-    Public Shared ReadOnly Property clsDefaultGlmFunction As RFunction
+    Public Shared ReadOnly Property clsDefaultGLmNBFunction As RFunction
         Get
 
-            Dim clsDefaultGlmFunc As New RFunction
+            Dim clsNegativeBinomialFunction As New RFunction
 
+            clsNegativeBinomialFunction.SetRCommand("glm.nb")
+            clsNegativeBinomialFunction.SetPackageName("MASS")
+            Return clsNegativeBinomialFunction
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property clsDefaultGLmPolrFunction As RFunction
+        Get
+
+            Dim clsRModelFunction As New RFunction
+
+            clsRModelFunction.SetRCommand("polr")
+            clsRModelFunction.SetPackageName("MASS")
+            Return clsRModelFunction
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property clsDefaultGLmMultinomFunction As RFunction
+        Get
+
+            Dim clsMultinomFunction As New RFunction
+
+            clsMultinomFunction.SetRCommand("multinom")
+            clsMultinomFunction.SetPackageName("nnet")
+            Return clsMultinomFunction
+        End Get
+    End Property
+    Public Shared ReadOnly Property clsDefaultGlmFunction As RFunction
+        Get
+            Dim clsDefaultGlmFunc As New RFunction
             clsDefaultGlmFunc.SetRCommand("glm")
             Return clsDefaultGlmFunc
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property clsDefaultAovFunction As RFunction
+        Get
+            Dim clsDefaultAovFunc As New RFunction
+            clsDefaultAovFunc.SetRCommand("aov")
+            Return clsDefaultAovFunc
         End Get
     End Property
 
@@ -87,6 +125,15 @@ Public Class clsRegressionDefaults
             Dim clsDefaultRaovFunction As New RFunction
             clsDefaultRaovFunction.SetPackageName("stats")
             clsDefaultRaovFunction.SetRCommand("anova")
+            Return clsDefaultRaovFunction
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property clsDefaultAnovaIIFunction As RFunction
+        Get
+            Dim clsDefaultRaovFunction As New RFunction
+            clsDefaultRaovFunction.SetPackageName("car")
+            clsDefaultRaovFunction.SetRCommand("Anova")
             Return clsDefaultRaovFunction
         End Get
     End Property

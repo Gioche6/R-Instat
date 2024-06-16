@@ -30,6 +30,7 @@ Public Class clsDataFramePage
     Private _clsRDotNetDataFrame As DataFrame
     Private _lstColumns As List(Of clsColumnHeaderDisplay)
     Private _hasChanged As Boolean
+    Private _useColumnSelectionInDataView As Boolean
 
     Private ReadOnly Property iColumnIncrements As Integer
         Get
@@ -151,6 +152,7 @@ Public Class clsDataFramePage
         _iColumnStart = 1
         _iRowStart = 1
         _hasChanged = True
+        _useColumnSelectionInDataView = True
     End Sub
 
     ''' <summary>
@@ -184,6 +186,15 @@ Public Class clsDataFramePage
         End If
     End Sub
 
+    Public Property UseColumnSelectionInDataView() As Boolean
+        Get
+            Return _useColumnSelectionInDataView
+        End Get
+        Set(value As Boolean)
+            _useColumnSelectionInDataView = value
+        End Set
+    End Property
+
     Private Function GetNoOfRowPages() As Integer
         'Needs to be a function as the number of increments can be changed through options 
         Return Math.Ceiling(_iTotalRowCount / intRowIncrements)
@@ -201,7 +212,8 @@ Public Class clsDataFramePage
         clsGetDataFrameRFunction.SetRCommand(_clsRLink.strInstatDataObject & "$get_data_frame")
         clsGetDataFrameRFunction.AddParameter("convert_to_character", "TRUE")
         clsGetDataFrameRFunction.AddParameter("use_current_filter", "TRUE")
-        clsGetDataFrameRFunction.AddParameter("use_column_selection", "TRUE")
+        'TODO. why not apply or not the column selection at the R level.
+        clsGetDataFrameRFunction.AddParameter("use_column_selection", If(UseColumnSelectionInDataView, "TRUE", "FALSE"))
         clsGetDataFrameRFunction.AddParameter("max_cols", iColumnIncrements)
         clsGetDataFrameRFunction.AddParameter("max_rows", intRowIncrements)
         clsGetDataFrameRFunction.AddParameter("start_row", _iRowStart)
@@ -261,16 +273,27 @@ Public Class clsDataFramePage
             columnHeader.bIsFactor = True
         ElseIf strHeaderType.Contains("character") Then
             columnHeader.strTypeShortCode = "(C)"
-        ElseIf strHeaderType.Contains("Date") OrElse strHeaderType.Contains("POSIXct") OrElse
-                strHeaderType.Contains("POSIXt") OrElse strHeaderType.Contains("hms") OrElse
-                strHeaderType.Contains("difftime") OrElse strHeaderType.Contains("Duration") OrElse
+        ElseIf strHeaderType.Contains("Date") OrElse strHeaderType.Contains("Duration") OrElse
                 strHeaderType.Contains("Period") OrElse strHeaderType.Contains("Interval") Then
             columnHeader.strTypeShortCode = "(D)"
+        ElseIf strHeaderType.Contains("POSIXct") OrElse
+                strHeaderType.Contains("POSIXt") Then
+            columnHeader.strTypeShortCode = "(D.T)"
+        ElseIf strHeaderType.Contains("hms") OrElse
+                strHeaderType.Contains("difftime") Then
+            columnHeader.strTypeShortCode = "(T)"
         ElseIf strHeaderType.Contains("logical") Then
             columnHeader.strTypeShortCode = "(L)"
-            ' Structured columns e.g. "circular" are coded with "(S)"
-        ElseIf strHeaderType.Contains("circular") Then
+            ' Structured columns e.g. "circular or bigz or bigq " are coded with "(S)"
+        ElseIf strHeaderType.Contains("circular") OrElse strHeaderType.Contains("bigz") OrElse
+               strHeaderType.Contains("bigq") OrElse strHeaderType.Contains("polynomial") Then
             columnHeader.strTypeShortCode = "(S)"
+        ElseIf strHeaderType.Contains("list") Then
+            columnHeader.strTypeShortCode = "(LT)"
+        ElseIf strHeaderType.Contains("complex") Then
+            columnHeader.strTypeShortCode = "(CX)"
+        ElseIf strHeaderType.Contains("sfc_MULTIPOLYGON") OrElse strHeaderType.Contains("sfc") Then
+            columnHeader.strTypeShortCode = "(G)"
             ' Types of data for specific Application areas e.g. survival are coded with "(A)"
             ' No examples implemented yet.
             'ElseIf strType.Contains() Then
@@ -330,6 +353,16 @@ Public Class clsDataFramePage
     End Sub
 
     ''' <summary>
+    ''' Go to the specific row page
+    ''' </summary>
+    Public Sub GoToSpecificRowPage(iRow As Integer)
+        If iRow > 0 Then
+            _iRowStart = (intRowIncrements * (iRow - 1)) + 1
+            _clsRDotNetDataFrame = GetDataFrameFromRCommand()
+        End If
+    End Sub
+
+    ''' <summary>
     ''' Does a previous page exist for rows
     ''' </summary>
     ''' <returns></returns>
@@ -377,6 +410,17 @@ Public Class clsDataFramePage
     Public Sub LoadNextColumnPage()
         If CanLoadNextColumnPage() Then
             _iColumnStart += iColumnIncrements
+            _clsRDotNetDataFrame = GetDataFrameFromRCommand()
+            SetHeaders()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Go to the specific column page
+    ''' </summary>
+    Public Sub GoToSpecificColumnPage(iColumn As Integer)
+        If iColumn > 0 Then
+            _iColumnStart = (iColumnIncrements * (iColumn - 1)) + 1
             _clsRDotNetDataFrame = GetDataFrameFromRCommand()
             SetHeaders()
         End If

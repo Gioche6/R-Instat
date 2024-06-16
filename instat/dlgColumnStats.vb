@@ -177,13 +177,6 @@ Public Class dlgColumnStats
         TestOKEnabled()
     End Sub
 
-    Private Sub cmdProportionsPercentages_Click(sender As Object, e As EventArgs) Handles cmdProportionsPercentages.Click
-        sdgProportionsPercentages.SetRFunction(clsDefaultFunction, bResetSubdialog)
-        sdgProportionsPercentages.ShowDialog()
-        bResetSubdialog = False
-        TestOKEnabled()
-    End Sub
-
     Private Sub ucrChkOmitMissing_ControlValueChanged(ucrChangedControl As ucrCore) Handles ucrChkOmitMissing.ControlValueChanged
         If clsSummariesList.ContainsParameter("summary_cor") OrElse clsSummariesList.ContainsParameter("summary_cov") Then
             clsDefaultFunction.AddParameter("use", Chr(34) & "'na.or.complete'" & Chr(34))
@@ -192,6 +185,10 @@ Public Class dlgColumnStats
         End If
         If Not ucrChkOmitMissing.Checked Then
             clsDefaultFunction.RemoveParameterByName("na_type")
+            clsDefaultFunction.RemoveParameterByName("na_max_n")
+            clsDefaultFunction.RemoveParameterByName("na_min_n")
+            clsDefaultFunction.RemoveParameterByName("na_max_prop")
+            clsDefaultFunction.RemoveParameterByName("na_consecutive_n")
         Else
             clsDefaultFunction.AddParameter("na_type", clsRFunctionParameter:=clsConcFunction, iPosition:=9)
         End If

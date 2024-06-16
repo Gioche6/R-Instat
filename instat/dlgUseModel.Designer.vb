@@ -22,6 +22,7 @@ Partial Class dlgUseModel
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.lblModel = New System.Windows.Forms.Label()
         Me.cmdsummary = New System.Windows.Forms.Button()
         Me.cmdanova = New System.Windows.Forms.Button()
@@ -49,10 +50,7 @@ Partial Class dlgUseModel
         Me.cmdCi = New System.Windows.Forms.Button()
         Me.cmdErlevd = New System.Windows.Forms.Button()
         Me.cmdClear = New System.Windows.Forms.Button()
-        Me.cmdHelp = New System.Windows.Forms.Button()
         Me.lblRpackage = New System.Windows.Forms.Label()
-        Me.ucrSaveResult = New instat.ucrSave()
-        Me.ucrChkIncludeArguments = New instat.ucrCheck()
         Me.grpSegmented = New System.Windows.Forms.GroupBox()
         Me.cmdSlope = New System.Windows.Forms.Button()
         Me.cmdPscore = New System.Windows.Forms.Button()
@@ -68,16 +66,56 @@ Partial Class dlgUseModel
         Me.cmdAapc = New System.Windows.Forms.Button()
         Me.cmdSegmented = New System.Windows.Forms.Button()
         Me.cmdSegmentedPrint = New System.Windows.Forms.Button()
+        Me.ContextMenuStripPrediction = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuPrediction = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStripGeneral = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuStats = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuCar = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStripExtRemes = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuExtRemes = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStripSegmented = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuSegmented = New System.Windows.Forms.ToolStripMenuItem()
+        Me.grpEmmeans = New System.Windows.Forms.GroupBox()
+        Me.cmdXtable = New System.Windows.Forms.Button()
+        Me.cmdTest = New System.Windows.Forms.Button()
+        Me.cmdPairs = New System.Windows.Forms.Button()
+        Me.cmdRefgrid = New System.Windows.Forms.Button()
+        Me.cmdEmmeansSummary = New System.Windows.Forms.Button()
+        Me.cmdpwpp = New System.Windows.Forms.Button()
+        Me.cmdEmmeansPlot = New System.Windows.Forms.Button()
+        Me.cmdIntplot = New System.Windows.Forms.Button()
+        Me.cmdContrast = New System.Windows.Forms.Button()
+        Me.cmdEmmeanConfint = New System.Windows.Forms.Button()
+        Me.cmdTrends = New System.Windows.Forms.Button()
+        Me.cmdEmmeans = New System.Windows.Forms.Button()
+        Me.cmdJoint = New System.Windows.Forms.Button()
+        Me.ContextMenuStripEmmeans = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripMenuEmmeans = New System.Windows.Forms.ToolStripMenuItem()
+        Me.cmdRHelpEmmeans = New instat.ucrSplitButton()
+        Me.cmdRHelpSegmented = New instat.ucrSplitButton()
+        Me.cmdRHelpExtRemes = New instat.ucrSplitButton()
+        Me.cmdRHelpGeneral = New instat.ucrSplitButton()
+        Me.cmdRHelpPrediction = New instat.ucrSplitButton()
+        Me.ucrTryModelling = New instat.ucrTry()
+        Me.ucrSaveResult = New instat.ucrSave()
+        Me.ucrChkIncludeArguments = New instat.ucrCheck()
         Me.ucrInputModels = New instat.ucrInputTextBox()
         Me.ucrSelectorUseModel = New instat.ucrSelectorByDataFrameAddRemove()
         Me.ucrBase = New instat.ucrButtons()
         Me.ucrReceiverForTestColumn = New instat.ucrReceiverExpression()
         Me.ucrInputComboRPackage = New instat.ucrInputComboBox()
-        Me.ucrTryModelling = New instat.ucrTry()
+        Me.cmdQuotes = New System.Windows.Forms.Button()
+        Me.cmdcurlySign = New System.Windows.Forms.Button()
         Me.grpGeneral.SuspendLayout()
         Me.grpPrediction.SuspendLayout()
         Me.grpExtrRemes.SuspendLayout()
         Me.grpSegmented.SuspendLayout()
+        Me.ContextMenuStripPrediction.SuspendLayout()
+        Me.ContextMenuStripGeneral.SuspendLayout()
+        Me.ContextMenuStripExtRemes.SuspendLayout()
+        Me.ContextMenuStripSegmented.SuspendLayout()
+        Me.grpEmmeans.SuspendLayout()
+        Me.ContextMenuStripEmmeans.SuspendLayout()
         Me.SuspendLayout()
         '
         'lblModel
@@ -397,16 +435,6 @@ Partial Class dlgUseModel
         Me.cmdClear.Text = "Clear"
         Me.cmdClear.UseVisualStyleBackColor = True
         '
-        'cmdHelp
-        '
-        Me.cmdHelp.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.cmdHelp.Location = New System.Drawing.Point(460, 79)
-        Me.cmdHelp.Name = "cmdHelp"
-        Me.cmdHelp.Size = New System.Drawing.Size(60, 23)
-        Me.cmdHelp.TabIndex = 33
-        Me.cmdHelp.Text = "Help"
-        Me.cmdHelp.UseVisualStyleBackColor = True
-        '
         'lblRpackage
         '
         Me.lblRpackage.AutoSize = True
@@ -416,25 +444,6 @@ Partial Class dlgUseModel
         Me.lblRpackage.Size = New System.Drawing.Size(63, 13)
         Me.lblRpackage.TabIndex = 36
         Me.lblRpackage.Text = "R package:"
-        '
-        'ucrSaveResult
-        '
-        Me.ucrSaveResult.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ucrSaveResult.Location = New System.Drawing.Point(10, 319)
-        Me.ucrSaveResult.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.ucrSaveResult.Name = "ucrSaveResult"
-        Me.ucrSaveResult.Size = New System.Drawing.Size(277, 24)
-        Me.ucrSaveResult.TabIndex = 35
-        '
-        'ucrChkIncludeArguments
-        '
-        Me.ucrChkIncludeArguments.AutoSize = True
-        Me.ucrChkIncludeArguments.Checked = False
-        Me.ucrChkIncludeArguments.Location = New System.Drawing.Point(445, 12)
-        Me.ucrChkIncludeArguments.Margin = New System.Windows.Forms.Padding(5)
-        Me.ucrChkIncludeArguments.Name = "ucrChkIncludeArguments"
-        Me.ucrChkIncludeArguments.Size = New System.Drawing.Size(130, 23)
-        Me.ucrChkIncludeArguments.TabIndex = 32
         '
         'grpSegmented
         '
@@ -615,6 +624,330 @@ Partial Class dlgUseModel
         Me.cmdSegmentedPrint.Text = "print"
         Me.cmdSegmentedPrint.UseVisualStyleBackColor = True
         '
+        'ContextMenuStripPrediction
+        '
+        Me.ContextMenuStripPrediction.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuPrediction})
+        Me.ContextMenuStripPrediction.Name = "ContextMenuStrip1"
+        Me.ContextMenuStripPrediction.Size = New System.Drawing.Size(129, 26)
+        '
+        'ToolStripMenuPrediction
+        '
+        Me.ToolStripMenuPrediction.Name = "ToolStripMenuPrediction"
+        Me.ToolStripMenuPrediction.Size = New System.Drawing.Size(128, 22)
+        Me.ToolStripMenuPrediction.Text = "prediction"
+        '
+        'ContextMenuStripGeneral
+        '
+        Me.ContextMenuStripGeneral.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuStats, Me.ToolStripMenuCar})
+        Me.ContextMenuStripGeneral.Name = "ContextMenuStrip1"
+        Me.ContextMenuStripGeneral.Size = New System.Drawing.Size(99, 48)
+        '
+        'ToolStripMenuStats
+        '
+        Me.ToolStripMenuStats.Name = "ToolStripMenuStats"
+        Me.ToolStripMenuStats.Size = New System.Drawing.Size(98, 22)
+        Me.ToolStripMenuStats.Text = "stats"
+        '
+        'ToolStripMenuCar
+        '
+        Me.ToolStripMenuCar.Name = "ToolStripMenuCar"
+        Me.ToolStripMenuCar.Size = New System.Drawing.Size(98, 22)
+        Me.ToolStripMenuCar.Text = "car"
+        '
+        'ContextMenuStripExtRemes
+        '
+        Me.ContextMenuStripExtRemes.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuExtRemes})
+        Me.ContextMenuStripExtRemes.Name = "ContextMenuStrip1"
+        Me.ContextMenuStripExtRemes.Size = New System.Drawing.Size(126, 26)
+        '
+        'ToolStripMenuExtRemes
+        '
+        Me.ToolStripMenuExtRemes.Name = "ToolStripMenuExtRemes"
+        Me.ToolStripMenuExtRemes.Size = New System.Drawing.Size(125, 22)
+        Me.ToolStripMenuExtRemes.Text = "extRemes"
+        '
+        'ContextMenuStripSegmented
+        '
+        Me.ContextMenuStripSegmented.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuSegmented})
+        Me.ContextMenuStripSegmented.Name = "ContextMenuStrip1"
+        Me.ContextMenuStripSegmented.Size = New System.Drawing.Size(134, 26)
+        '
+        'ToolStripMenuSegmented
+        '
+        Me.ToolStripMenuSegmented.Name = "ToolStripMenuSegmented"
+        Me.ToolStripMenuSegmented.Size = New System.Drawing.Size(133, 22)
+        Me.ToolStripMenuSegmented.Text = "segmented"
+        '
+        'grpEmmeans
+        '
+        Me.grpEmmeans.Controls.Add(Me.cmdcurlySign)
+        Me.grpEmmeans.Controls.Add(Me.cmdQuotes)
+        Me.grpEmmeans.Controls.Add(Me.cmdXtable)
+        Me.grpEmmeans.Controls.Add(Me.cmdTest)
+        Me.grpEmmeans.Controls.Add(Me.cmdPairs)
+        Me.grpEmmeans.Controls.Add(Me.cmdRefgrid)
+        Me.grpEmmeans.Controls.Add(Me.cmdEmmeansSummary)
+        Me.grpEmmeans.Controls.Add(Me.cmdpwpp)
+        Me.grpEmmeans.Controls.Add(Me.cmdEmmeansPlot)
+        Me.grpEmmeans.Controls.Add(Me.cmdIntplot)
+        Me.grpEmmeans.Controls.Add(Me.cmdContrast)
+        Me.grpEmmeans.Controls.Add(Me.cmdEmmeanConfint)
+        Me.grpEmmeans.Controls.Add(Me.cmdTrends)
+        Me.grpEmmeans.Controls.Add(Me.cmdEmmeans)
+        Me.grpEmmeans.Controls.Add(Me.cmdJoint)
+        Me.grpEmmeans.Location = New System.Drawing.Point(260, 106)
+        Me.grpEmmeans.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.grpEmmeans.Name = "grpEmmeans"
+        Me.grpEmmeans.Padding = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.grpEmmeans.Size = New System.Drawing.Size(282, 142)
+        Me.grpEmmeans.TabIndex = 162
+        Me.grpEmmeans.TabStop = False
+        Me.grpEmmeans.Text = "Emmeans"
+        '
+        'cmdXtable
+        '
+        Me.cmdXtable.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdXtable.Location = New System.Drawing.Point(3, 99)
+        Me.cmdXtable.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdXtable.Name = "cmdXtable"
+        Me.cmdXtable.Size = New System.Drawing.Size(69, 30)
+        Me.cmdXtable.TabIndex = 165
+        Me.cmdXtable.Text = "xtable"
+        Me.cmdXtable.UseVisualStyleBackColor = True
+        '
+        'cmdTest
+        '
+        Me.cmdTest.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdTest.Location = New System.Drawing.Point(209, 70)
+        Me.cmdTest.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdTest.Name = "cmdTest"
+        Me.cmdTest.Size = New System.Drawing.Size(69, 30)
+        Me.cmdTest.TabIndex = 164
+        Me.cmdTest.Text = "test"
+        Me.cmdTest.UseVisualStyleBackColor = True
+        '
+        'cmdPairs
+        '
+        Me.cmdPairs.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdPairs.Location = New System.Drawing.Point(209, 41)
+        Me.cmdPairs.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdPairs.Name = "cmdPairs"
+        Me.cmdPairs.Size = New System.Drawing.Size(69, 30)
+        Me.cmdPairs.TabIndex = 163
+        Me.cmdPairs.Text = "pairs"
+        Me.cmdPairs.UseVisualStyleBackColor = True
+        '
+        'cmdRefgrid
+        '
+        Me.cmdRefgrid.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdRefgrid.Location = New System.Drawing.Point(209, 12)
+        Me.cmdRefgrid.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdRefgrid.Name = "cmdRefgrid"
+        Me.cmdRefgrid.Size = New System.Drawing.Size(69, 30)
+        Me.cmdRefgrid.TabIndex = 162
+        Me.cmdRefgrid.Text = "refgrid"
+        Me.cmdRefgrid.UseVisualStyleBackColor = True
+        '
+        'cmdEmmeansSummary
+        '
+        Me.cmdEmmeansSummary.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdEmmeansSummary.Location = New System.Drawing.Point(140, 70)
+        Me.cmdEmmeansSummary.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdEmmeansSummary.Name = "cmdEmmeansSummary"
+        Me.cmdEmmeansSummary.Size = New System.Drawing.Size(69, 30)
+        Me.cmdEmmeansSummary.TabIndex = 159
+        Me.cmdEmmeansSummary.Text = "summary"
+        Me.cmdEmmeansSummary.UseVisualStyleBackColor = True
+        '
+        'cmdpwpp
+        '
+        Me.cmdpwpp.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdpwpp.Location = New System.Drawing.Point(72, 70)
+        Me.cmdpwpp.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdpwpp.Name = "cmdpwpp"
+        Me.cmdpwpp.Size = New System.Drawing.Size(69, 30)
+        Me.cmdpwpp.TabIndex = 158
+        Me.cmdpwpp.Text = "pwpp"
+        Me.cmdpwpp.UseVisualStyleBackColor = True
+        '
+        'cmdEmmeansPlot
+        '
+        Me.cmdEmmeansPlot.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdEmmeansPlot.Location = New System.Drawing.Point(3, 70)
+        Me.cmdEmmeansPlot.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdEmmeansPlot.Name = "cmdEmmeansPlot"
+        Me.cmdEmmeansPlot.Size = New System.Drawing.Size(69, 30)
+        Me.cmdEmmeansPlot.TabIndex = 157
+        Me.cmdEmmeansPlot.Text = "plot"
+        Me.cmdEmmeansPlot.UseVisualStyleBackColor = True
+        '
+        'cmdIntplot
+        '
+        Me.cmdIntplot.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdIntplot.Location = New System.Drawing.Point(140, 41)
+        Me.cmdIntplot.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdIntplot.Name = "cmdIntplot"
+        Me.cmdIntplot.Size = New System.Drawing.Size(69, 30)
+        Me.cmdIntplot.TabIndex = 156
+        Me.cmdIntplot.Text = "intplot"
+        Me.cmdIntplot.UseVisualStyleBackColor = True
+        '
+        'cmdContrast
+        '
+        Me.cmdContrast.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdContrast.Location = New System.Drawing.Point(72, 41)
+        Me.cmdContrast.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdContrast.Name = "cmdContrast"
+        Me.cmdContrast.Size = New System.Drawing.Size(69, 30)
+        Me.cmdContrast.TabIndex = 155
+        Me.cmdContrast.Text = "contrast"
+        Me.cmdContrast.UseVisualStyleBackColor = True
+        '
+        'cmdEmmeanConfint
+        '
+        Me.cmdEmmeanConfint.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdEmmeanConfint.Location = New System.Drawing.Point(3, 41)
+        Me.cmdEmmeanConfint.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdEmmeanConfint.Name = "cmdEmmeanConfint"
+        Me.cmdEmmeanConfint.Size = New System.Drawing.Size(69, 30)
+        Me.cmdEmmeanConfint.TabIndex = 154
+        Me.cmdEmmeanConfint.Text = "confint"
+        Me.cmdEmmeanConfint.UseVisualStyleBackColor = True
+        '
+        'cmdTrends
+        '
+        Me.cmdTrends.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdTrends.Location = New System.Drawing.Point(72, 12)
+        Me.cmdTrends.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdTrends.Name = "cmdTrends"
+        Me.cmdTrends.Size = New System.Drawing.Size(69, 30)
+        Me.cmdTrends.TabIndex = 126
+        Me.cmdTrends.Text = "trends"
+        Me.cmdTrends.UseVisualStyleBackColor = True
+        '
+        'cmdEmmeans
+        '
+        Me.cmdEmmeans.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdEmmeans.Location = New System.Drawing.Point(3, 12)
+        Me.cmdEmmeans.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdEmmeans.Name = "cmdEmmeans"
+        Me.cmdEmmeans.Size = New System.Drawing.Size(69, 30)
+        Me.cmdEmmeans.TabIndex = 124
+        Me.cmdEmmeans.Text = "emmeans"
+        Me.cmdEmmeans.UseVisualStyleBackColor = True
+        '
+        'cmdJoint
+        '
+        Me.cmdJoint.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdJoint.Location = New System.Drawing.Point(140, 12)
+        Me.cmdJoint.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdJoint.Name = "cmdJoint"
+        Me.cmdJoint.Size = New System.Drawing.Size(69, 30)
+        Me.cmdJoint.TabIndex = 153
+        Me.cmdJoint.Text = "joint"
+        Me.cmdJoint.UseVisualStyleBackColor = True
+        '
+        'ContextMenuStripEmmeans
+        '
+        Me.ContextMenuStripEmmeans.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuEmmeans})
+        Me.ContextMenuStripEmmeans.Name = "ContextMenuStrip1"
+        Me.ContextMenuStripEmmeans.Size = New System.Drawing.Size(127, 26)
+        '
+        'ToolStripMenuEmmeans
+        '
+        Me.ToolStripMenuEmmeans.Name = "ToolStripMenuEmmeans"
+        Me.ToolStripMenuEmmeans.Size = New System.Drawing.Size(126, 22)
+        Me.ToolStripMenuEmmeans.Text = "emmeans"
+        '
+        'cmdRHelpEmmeans
+        '
+        Me.cmdRHelpEmmeans.AutoSize = True
+        Me.cmdRHelpEmmeans.ContextMenuStrip = Me.ContextMenuStripEmmeans
+        Me.cmdRHelpEmmeans.Location = New System.Drawing.Point(460, 79)
+        Me.cmdRHelpEmmeans.Name = "cmdRHelpEmmeans"
+        Me.cmdRHelpEmmeans.Size = New System.Drawing.Size(68, 23)
+        Me.cmdRHelpEmmeans.SplitMenuStrip = Me.ContextMenuStripEmmeans
+        Me.cmdRHelpEmmeans.TabIndex = 223
+        Me.cmdRHelpEmmeans.Text = "R Help"
+        Me.cmdRHelpEmmeans.UseVisualStyleBackColor = True
+        '
+        'cmdRHelpSegmented
+        '
+        Me.cmdRHelpSegmented.AutoSize = True
+        Me.cmdRHelpSegmented.ContextMenuStrip = Me.ContextMenuStripSegmented
+        Me.cmdRHelpSegmented.Location = New System.Drawing.Point(460, 80)
+        Me.cmdRHelpSegmented.Name = "cmdRHelpSegmented"
+        Me.cmdRHelpSegmented.Size = New System.Drawing.Size(68, 23)
+        Me.cmdRHelpSegmented.SplitMenuStrip = Me.ContextMenuStripSegmented
+        Me.cmdRHelpSegmented.TabIndex = 222
+        Me.cmdRHelpSegmented.Text = "R Help"
+        Me.cmdRHelpSegmented.UseVisualStyleBackColor = True
+        '
+        'cmdRHelpExtRemes
+        '
+        Me.cmdRHelpExtRemes.AutoSize = True
+        Me.cmdRHelpExtRemes.ContextMenuStrip = Me.ContextMenuStripExtRemes
+        Me.cmdRHelpExtRemes.Location = New System.Drawing.Point(461, 79)
+        Me.cmdRHelpExtRemes.Name = "cmdRHelpExtRemes"
+        Me.cmdRHelpExtRemes.Size = New System.Drawing.Size(68, 23)
+        Me.cmdRHelpExtRemes.SplitMenuStrip = Me.ContextMenuStripExtRemes
+        Me.cmdRHelpExtRemes.TabIndex = 221
+        Me.cmdRHelpExtRemes.Text = "R Help"
+        Me.cmdRHelpExtRemes.UseVisualStyleBackColor = True
+        '
+        'cmdRHelpGeneral
+        '
+        Me.cmdRHelpGeneral.AutoSize = True
+        Me.cmdRHelpGeneral.ContextMenuStrip = Me.ContextMenuStripGeneral
+        Me.cmdRHelpGeneral.Location = New System.Drawing.Point(460, 80)
+        Me.cmdRHelpGeneral.Name = "cmdRHelpGeneral"
+        Me.cmdRHelpGeneral.Size = New System.Drawing.Size(68, 23)
+        Me.cmdRHelpGeneral.SplitMenuStrip = Me.ContextMenuStripGeneral
+        Me.cmdRHelpGeneral.TabIndex = 220
+        Me.cmdRHelpGeneral.Text = "R Help"
+        Me.cmdRHelpGeneral.UseVisualStyleBackColor = True
+        '
+        'cmdRHelpPrediction
+        '
+        Me.cmdRHelpPrediction.AutoSize = True
+        Me.cmdRHelpPrediction.ContextMenuStrip = Me.ContextMenuStripPrediction
+        Me.cmdRHelpPrediction.Location = New System.Drawing.Point(460, 79)
+        Me.cmdRHelpPrediction.Name = "cmdRHelpPrediction"
+        Me.cmdRHelpPrediction.Size = New System.Drawing.Size(68, 23)
+        Me.cmdRHelpPrediction.SplitMenuStrip = Me.ContextMenuStripPrediction
+        Me.cmdRHelpPrediction.TabIndex = 219
+        Me.cmdRHelpPrediction.Text = "R Help"
+        Me.cmdRHelpPrediction.UseVisualStyleBackColor = True
+        '
+        'ucrTryModelling
+        '
+        Me.ucrTryModelling.AutoSize = True
+        Me.ucrTryModelling.Location = New System.Drawing.Point(2, 285)
+        Me.ucrTryModelling.Margin = New System.Windows.Forms.Padding(4)
+        Me.ucrTryModelling.Name = "ucrTryModelling"
+        Me.ucrTryModelling.RunCommandAsMultipleLines = False
+        Me.ucrTryModelling.Size = New System.Drawing.Size(480, 37)
+        Me.ucrTryModelling.TabIndex = 163
+        '
+        'ucrSaveResult
+        '
+        Me.ucrSaveResult.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.ucrSaveResult.Location = New System.Drawing.Point(10, 319)
+        Me.ucrSaveResult.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.ucrSaveResult.Name = "ucrSaveResult"
+        Me.ucrSaveResult.Size = New System.Drawing.Size(277, 24)
+        Me.ucrSaveResult.TabIndex = 35
+        '
+        'ucrChkIncludeArguments
+        '
+        Me.ucrChkIncludeArguments.AutoSize = True
+        Me.ucrChkIncludeArguments.Checked = False
+        Me.ucrChkIncludeArguments.Location = New System.Drawing.Point(445, 12)
+        Me.ucrChkIncludeArguments.Margin = New System.Windows.Forms.Padding(5)
+        Me.ucrChkIncludeArguments.Name = "ucrChkIncludeArguments"
+        Me.ucrChkIncludeArguments.Size = New System.Drawing.Size(130, 23)
+        Me.ucrChkIncludeArguments.TabIndex = 32
+        '
         'ucrInputModels
         '
         Me.ucrInputModels.AddQuotesIfUnrecognised = True
@@ -646,7 +979,7 @@ Partial Class dlgUseModel
         Me.ucrBase.Location = New System.Drawing.Point(9, 362)
         Me.ucrBase.Margin = New System.Windows.Forms.Padding(4)
         Me.ucrBase.Name = "ucrBase"
-        Me.ucrBase.Size = New System.Drawing.Size(405, 52)
+        Me.ucrBase.Size = New System.Drawing.Size(408, 52)
         Me.ucrBase.TabIndex = 20
         '
         'ucrReceiverForTestColumn
@@ -674,15 +1007,27 @@ Partial Class dlgUseModel
         Me.ucrInputComboRPackage.Size = New System.Drawing.Size(122, 21)
         Me.ucrInputComboRPackage.TabIndex = 5
         '
-        'ucrTryModelling
+        'cmdQuotes
         '
-        Me.ucrTryModelling.AutoSize = True
-        Me.ucrTryModelling.Location = New System.Drawing.Point(2, 285)
-        Me.ucrTryModelling.Margin = New System.Windows.Forms.Padding(4)
-        Me.ucrTryModelling.Name = "ucrTryModelling"
-        Me.ucrTryModelling.RunCommandAsMultipleLines = False
-        Me.ucrTryModelling.Size = New System.Drawing.Size(480, 30)
-        Me.ucrTryModelling.TabIndex = 163
+        Me.cmdQuotes.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdQuotes.Location = New System.Drawing.Point(72, 99)
+        Me.cmdQuotes.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdQuotes.Name = "cmdQuotes"
+        Me.cmdQuotes.Size = New System.Drawing.Size(69, 30)
+        Me.cmdQuotes.TabIndex = 166
+        Me.cmdQuotes.Text = """   """
+        Me.cmdQuotes.UseVisualStyleBackColor = True
+        '
+        'cmdcurlySign
+        '
+        Me.cmdcurlySign.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.cmdcurlySign.Location = New System.Drawing.Point(140, 99)
+        Me.cmdcurlySign.Margin = New System.Windows.Forms.Padding(2, 3, 2, 3)
+        Me.cmdcurlySign.Name = "cmdcurlySign"
+        Me.cmdcurlySign.Size = New System.Drawing.Size(69, 30)
+        Me.cmdcurlySign.TabIndex = 167
+        Me.cmdcurlySign.Text = "~"
+        Me.cmdcurlySign.UseVisualStyleBackColor = True
         '
         'dlgUseModel
         '
@@ -690,13 +1035,18 @@ Partial Class dlgUseModel
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(582, 423)
+        Me.Controls.Add(Me.grpEmmeans)
+        Me.Controls.Add(Me.grpSegmented)
+        Me.Controls.Add(Me.cmdRHelpEmmeans)
+        Me.Controls.Add(Me.cmdRHelpSegmented)
+        Me.Controls.Add(Me.cmdRHelpExtRemes)
+        Me.Controls.Add(Me.cmdRHelpGeneral)
+        Me.Controls.Add(Me.cmdRHelpPrediction)
         Me.Controls.Add(Me.grpGeneral)
         Me.Controls.Add(Me.ucrTryModelling)
         Me.Controls.Add(Me.lblRpackage)
         Me.Controls.Add(Me.ucrSaveResult)
-        Me.Controls.Add(Me.cmdHelp)
         Me.Controls.Add(Me.ucrChkIncludeArguments)
-        Me.Controls.Add(Me.grpSegmented)
         Me.Controls.Add(Me.cmdClear)
         Me.Controls.Add(Me.grpExtrRemes)
         Me.Controls.Add(Me.ucrInputModels)
@@ -716,6 +1066,12 @@ Partial Class dlgUseModel
         Me.grpPrediction.ResumeLayout(False)
         Me.grpExtrRemes.ResumeLayout(False)
         Me.grpSegmented.ResumeLayout(False)
+        Me.ContextMenuStripPrediction.ResumeLayout(False)
+        Me.ContextMenuStripGeneral.ResumeLayout(False)
+        Me.ContextMenuStripExtRemes.ResumeLayout(False)
+        Me.ContextMenuStripSegmented.ResumeLayout(False)
+        Me.grpEmmeans.ResumeLayout(False)
+        Me.ContextMenuStripEmmeans.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -752,7 +1108,6 @@ Partial Class dlgUseModel
     Friend WithEvents cmdClear As Button
 
     Friend WithEvents ucrChkIncludeArguments As ucrCheck
-    Friend WithEvents cmdHelp As Button
     Friend WithEvents ucrSaveResult As ucrSave
     Friend WithEvents lblRpackage As Label
     Friend WithEvents cmdPlotFevd As Button
@@ -775,4 +1130,36 @@ Partial Class dlgUseModel
     Friend WithEvents cmdSlope As Button
     Friend WithEvents cmdPscore As Button
     Friend WithEvents ucrTryModelling As ucrTry
+    Friend WithEvents cmdRHelpSegmented As ucrSplitButton
+    Friend WithEvents cmdRHelpExtRemes As ucrSplitButton
+    Friend WithEvents cmdRHelpGeneral As ucrSplitButton
+    Friend WithEvents cmdRHelpPrediction As ucrSplitButton
+    Friend WithEvents ContextMenuStripGeneral As ContextMenuStrip
+    Friend WithEvents ToolStripMenuStats As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuCar As ToolStripMenuItem
+    Friend WithEvents ContextMenuStripPrediction As ContextMenuStrip
+    Friend WithEvents ToolStripMenuPrediction As ToolStripMenuItem
+    Friend WithEvents ContextMenuStripExtRemes As ContextMenuStrip
+    Friend WithEvents ToolStripMenuExtRemes As ToolStripMenuItem
+    Friend WithEvents ContextMenuStripSegmented As ContextMenuStrip
+    Friend WithEvents ToolStripMenuSegmented As ToolStripMenuItem
+    Friend WithEvents grpEmmeans As GroupBox
+    Friend WithEvents cmdEmmeansSummary As Button
+    Friend WithEvents cmdpwpp As Button
+    Friend WithEvents cmdEmmeansPlot As Button
+    Friend WithEvents cmdIntplot As Button
+    Friend WithEvents cmdContrast As Button
+    Friend WithEvents cmdEmmeanConfint As Button
+    Friend WithEvents cmdTrends As Button
+    Friend WithEvents cmdEmmeans As Button
+    Friend WithEvents cmdJoint As Button
+    Friend WithEvents cmdXtable As Button
+    Friend WithEvents cmdTest As Button
+    Friend WithEvents cmdPairs As Button
+    Friend WithEvents cmdRefgrid As Button
+    Friend WithEvents cmdRHelpEmmeans As ucrSplitButton
+    Friend WithEvents ContextMenuStripEmmeans As ContextMenuStrip
+    Friend WithEvents ToolStripMenuEmmeans As ToolStripMenuItem
+    Friend WithEvents cmdcurlySign As Button
+    Friend WithEvents cmdQuotes As Button
 End Class

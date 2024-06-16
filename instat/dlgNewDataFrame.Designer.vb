@@ -39,10 +39,12 @@ Partial Class dlgNewDataFrame
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblRows = New System.Windows.Forms.Label()
         Me.lblColumns = New System.Windows.Forms.Label()
         Me.rdoCommand = New System.Windows.Forms.RadioButton()
@@ -68,22 +70,22 @@ Partial Class dlgNewDataFrame
         Me.colDefault = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.colLevels = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.colLabel = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.rdoLists = New System.Windows.Forms.RadioButton()
+        Me.lblCategories = New System.Windows.Forms.Label()
+        Me.lblLists = New System.Windows.Forms.Label()
+        Me.ucrNudCols = New instat.ucrNud()
+        Me.ucrChkRCommand = New instat.ucrCheck()
+        Me.ucrInputListInCategory = New instat.ucrInputComboBox()
+        Me.ucrInputCategory = New instat.ucrInputComboBox()
+        Me.ucrInputLists = New instat.ucrInputTextBox()
         Me.ucrChkIncludeLabel = New instat.ucrCheck()
         Me.ucrChkVariable = New instat.ucrCheck()
         Me.ucrTryNewDataFrame = New instat.ucrTry()
         Me.ucrInputCommand = New instat.ucrInputTextBox()
         Me.ucrPnlDataFrame = New instat.UcrPanel()
         Me.ucrNewDFName = New instat.ucrSave()
-        Me.ucrNudCols = New instat.ucrNud()
         Me.ucrNudRows = New instat.ucrNud()
         Me.ucrBase = New instat.ucrButtons()
-        Me.rdoLists = New System.Windows.Forms.RadioButton()
-        Me.lblCategories = New System.Windows.Forms.Label()
-        Me.ucrInputLists = New instat.ucrInputTextBox()
-        Me.ucrInputCategory = New instat.ucrInputComboBox()
-        Me.ucrInputListInCategory = New instat.ucrInputComboBox()
-        Me.lblLists = New System.Windows.Forms.Label()
-        Me.ucrChkRCommand = New instat.ucrCheck()
         CType(Me.dataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuStripCommand.SuspendLayout()
         CType(Me.dataTypeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -93,7 +95,7 @@ Partial Class dlgNewDataFrame
         '
         Me.lblRows.AutoSize = True
         Me.lblRows.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.lblRows.Location = New System.Drawing.Point(261, 58)
+        Me.lblRows.Location = New System.Drawing.Point(265, 58)
         Me.lblRows.Name = "lblRows"
         Me.lblRows.Size = New System.Drawing.Size(37, 13)
         Me.lblRows.TabIndex = 8
@@ -117,9 +119,9 @@ Partial Class dlgNewDataFrame
         Me.rdoCommand.FlatAppearance.CheckedBackColor = System.Drawing.SystemColors.ActiveCaption
         Me.rdoCommand.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.rdoCommand.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.rdoCommand.Location = New System.Drawing.Point(186, 15)
+        Me.rdoCommand.Location = New System.Drawing.Point(333, 15)
         Me.rdoCommand.Name = "rdoCommand"
-        Me.rdoCommand.Size = New System.Drawing.Size(85, 27)
+        Me.rdoCommand.Size = New System.Drawing.Size(78, 27)
         Me.rdoCommand.TabIndex = 2
         Me.rdoCommand.TabStop = True
         Me.rdoCommand.Text = "Command"
@@ -134,9 +136,9 @@ Partial Class dlgNewDataFrame
         Me.rdoRandom.FlatAppearance.CheckedBackColor = System.Drawing.SystemColors.ActiveCaption
         Me.rdoRandom.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.rdoRandom.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.rdoRandom.Location = New System.Drawing.Point(269, 15)
+        Me.rdoRandom.Location = New System.Drawing.Point(192, 15)
         Me.rdoRandom.Name = "rdoRandom"
-        Me.rdoRandom.Size = New System.Drawing.Size(85, 27)
+        Me.rdoRandom.Size = New System.Drawing.Size(73, 27)
         Me.rdoRandom.TabIndex = 3
         Me.rdoRandom.TabStop = True
         Me.rdoRandom.Text = "Random"
@@ -151,12 +153,12 @@ Partial Class dlgNewDataFrame
         Me.rdoEmpty.FlatAppearance.CheckedBackColor = System.Drawing.SystemColors.ActiveCaption
         Me.rdoEmpty.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.rdoEmpty.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.rdoEmpty.Location = New System.Drawing.Point(20, 15)
+        Me.rdoEmpty.Location = New System.Drawing.Point(45, 15)
         Me.rdoEmpty.Name = "rdoEmpty"
-        Me.rdoEmpty.Size = New System.Drawing.Size(85, 27)
+        Me.rdoEmpty.Size = New System.Drawing.Size(74, 27)
         Me.rdoEmpty.TabIndex = 4
         Me.rdoEmpty.TabStop = True
-        Me.rdoEmpty.Text = "Empty"
+        Me.rdoEmpty.Text = "New"
         Me.rdoEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.rdoEmpty.UseVisualStyleBackColor = True
         '
@@ -168,9 +170,9 @@ Partial Class dlgNewDataFrame
         Me.rdoConstruct.FlatAppearance.CheckedBackColor = System.Drawing.SystemColors.ActiveCaption
         Me.rdoConstruct.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.rdoConstruct.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.rdoConstruct.Location = New System.Drawing.Point(103, 15)
+        Me.rdoConstruct.Location = New System.Drawing.Point(265, 15)
         Me.rdoConstruct.Name = "rdoConstruct"
-        Me.rdoConstruct.Size = New System.Drawing.Size(85, 27)
+        Me.rdoConstruct.Size = New System.Drawing.Size(69, 27)
         Me.rdoConstruct.TabIndex = 1
         Me.rdoConstruct.TabStop = True
         Me.rdoConstruct.Text = "Construct"
@@ -180,27 +182,35 @@ Partial Class dlgNewDataFrame
         'dataGridView
         '
         Me.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle13
         Me.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colRowNum, Me.colName, Me.colExpression})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dataGridView.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dataGridView.DefaultCellStyle = DataGridViewCellStyle14
         Me.dataGridView.Location = New System.Drawing.Point(19, 81)
         Me.dataGridView.Margin = New System.Windows.Forms.Padding(2)
         Me.dataGridView.Name = "dataGridView"
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dataGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
         Me.dataGridView.RowHeadersVisible = False
         Me.dataGridView.RowTemplate.Height = 28
         Me.dataGridView.Size = New System.Drawing.Size(417, 159)
@@ -280,7 +290,7 @@ Partial Class dlgNewDataFrame
         'btnExample
         '
         Me.btnExample.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.btnExample.Location = New System.Drawing.Point(94, 55)
+        Me.btnExample.Location = New System.Drawing.Point(96, 55)
         Me.btnExample.Margin = New System.Windows.Forms.Padding(2)
         Me.btnExample.Name = "btnExample"
         Me.btnExample.Size = New System.Drawing.Size(166, 22)
@@ -292,27 +302,35 @@ Partial Class dlgNewDataFrame
         '
         Me.dataTypeGridView.AllowUserToAddRows = False
         Me.dataTypeGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dataTypeGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dataTypeGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
         Me.dataTypeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dataTypeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.no, Me.colNames, Me.cbType, Me.colDefault, Me.colLevels, Me.colLabel})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dataTypeGridView.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dataTypeGridView.DefaultCellStyle = DataGridViewCellStyle17
         Me.dataTypeGridView.Location = New System.Drawing.Point(20, 133)
         Me.dataTypeGridView.Margin = New System.Windows.Forms.Padding(2)
         Me.dataTypeGridView.Name = "dataTypeGridView"
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dataTypeGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
         Me.dataTypeGridView.RowHeadersVisible = False
         Me.dataTypeGridView.RowTemplate.Height = 28
         Me.dataTypeGridView.Size = New System.Drawing.Size(416, 115)
@@ -343,7 +361,7 @@ Partial Class dlgNewDataFrame
         'colDefault
         '
         Me.colDefault.HeaderText = "Default"
-        Me.colDefault.Items.AddRange(New Object() {"NA", "0", "1", "1,10", "letters[1:10]", "LETTERS[1:10]"})
+        Me.colDefault.Items.AddRange(New Object() {"NA", "0", "1", "1,1000"})
         Me.colDefault.Name = "colDefault"
         '
         'colLevels
@@ -359,13 +377,106 @@ Partial Class dlgNewDataFrame
         Me.colLabel.Visible = False
         Me.colLabel.Width = 80
         '
+        'rdoLists
+        '
+        Me.rdoLists.Appearance = System.Windows.Forms.Appearance.Button
+        Me.rdoLists.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption
+        Me.rdoLists.FlatAppearance.BorderSize = 2
+        Me.rdoLists.FlatAppearance.CheckedBackColor = System.Drawing.SystemColors.ActiveCaption
+        Me.rdoLists.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.rdoLists.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.rdoLists.Location = New System.Drawing.Point(119, 15)
+        Me.rdoLists.Name = "rdoLists"
+        Me.rdoLists.Size = New System.Drawing.Size(74, 27)
+        Me.rdoLists.TabIndex = 165
+        Me.rdoLists.TabStop = True
+        Me.rdoLists.Text = "Lists"
+        Me.rdoLists.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.rdoLists.UseVisualStyleBackColor = True
+        '
+        'lblCategories
+        '
+        Me.lblCategories.AutoSize = True
+        Me.lblCategories.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.lblCategories.Location = New System.Drawing.Point(19, 59)
+        Me.lblCategories.Name = "lblCategories"
+        Me.lblCategories.Size = New System.Drawing.Size(52, 13)
+        Me.lblCategories.TabIndex = 169
+        Me.lblCategories.Text = "Category:"
+        '
+        'lblLists
+        '
+        Me.lblLists.AutoSize = True
+        Me.lblLists.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.lblLists.Location = New System.Drawing.Point(40, 87)
+        Me.lblLists.Name = "lblLists"
+        Me.lblLists.Size = New System.Drawing.Size(31, 13)
+        Me.lblLists.TabIndex = 174
+        Me.lblLists.Text = "Lists:"
+        '
+        'ucrNudCols
+        '
+        Me.ucrNudCols.AutoSize = True
+        Me.ucrNudCols.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.ucrNudCols.Increment = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.ucrNudCols.Location = New System.Drawing.Point(101, 56)
+        Me.ucrNudCols.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
+        Me.ucrNudCols.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
+        Me.ucrNudCols.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.ucrNudCols.Name = "ucrNudCols"
+        Me.ucrNudCols.Size = New System.Drawing.Size(55, 20)
+        Me.ucrNudCols.TabIndex = 11
+        Me.ucrNudCols.Value = New Decimal(New Integer() {0, 0, 0, 0})
+        '
+        'ucrChkRCommand
+        '
+        Me.ucrChkRCommand.AutoSize = True
+        Me.ucrChkRCommand.Checked = False
+        Me.ucrChkRCommand.Location = New System.Drawing.Point(19, 114)
+        Me.ucrChkRCommand.Name = "ucrChkRCommand"
+        Me.ucrChkRCommand.Size = New System.Drawing.Size(177, 23)
+        Me.ucrChkRCommand.TabIndex = 175
+        '
+        'ucrInputListInCategory
+        '
+        Me.ucrInputListInCategory.AddQuotesIfUnrecognised = True
+        Me.ucrInputListInCategory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.ucrInputListInCategory.GetSetSelectedIndex = -1
+        Me.ucrInputListInCategory.IsReadOnly = False
+        Me.ucrInputListInCategory.Location = New System.Drawing.Point(86, 84)
+        Me.ucrInputListInCategory.Name = "ucrInputListInCategory"
+        Me.ucrInputListInCategory.Size = New System.Drawing.Size(166, 26)
+        Me.ucrInputListInCategory.TabIndex = 173
+        '
+        'ucrInputCategory
+        '
+        Me.ucrInputCategory.AddQuotesIfUnrecognised = True
+        Me.ucrInputCategory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.ucrInputCategory.GetSetSelectedIndex = -1
+        Me.ucrInputCategory.IsReadOnly = False
+        Me.ucrInputCategory.Location = New System.Drawing.Point(86, 52)
+        Me.ucrInputCategory.Name = "ucrInputCategory"
+        Me.ucrInputCategory.Size = New System.Drawing.Size(166, 26)
+        Me.ucrInputCategory.TabIndex = 172
+        '
+        'ucrInputLists
+        '
+        Me.ucrInputLists.AddQuotesIfUnrecognised = True
+        Me.ucrInputLists.AutoSize = True
+        Me.ucrInputLists.IsMultiline = True
+        Me.ucrInputLists.IsReadOnly = False
+        Me.ucrInputLists.Location = New System.Drawing.Point(21, 143)
+        Me.ucrInputLists.Name = "ucrInputLists"
+        Me.ucrInputLists.Size = New System.Drawing.Size(415, 31)
+        Me.ucrInputLists.TabIndex = 171
+        '
         'ucrChkIncludeLabel
         '
         Me.ucrChkIncludeLabel.AutoSize = True
         Me.ucrChkIncludeLabel.Checked = False
         Me.ucrChkIncludeLabel.Location = New System.Drawing.Point(194, 101)
         Me.ucrChkIncludeLabel.Name = "ucrChkIncludeLabel"
-        Me.ucrChkIncludeLabel.Size = New System.Drawing.Size(100, 23)
+        Me.ucrChkIncludeLabel.Size = New System.Drawing.Size(160, 23)
         Me.ucrChkIncludeLabel.TabIndex = 164
         '
         'ucrChkVariable
@@ -374,7 +485,7 @@ Partial Class dlgNewDataFrame
         Me.ucrChkVariable.Checked = False
         Me.ucrChkVariable.Location = New System.Drawing.Point(37, 101)
         Me.ucrChkVariable.Name = "ucrChkVariable"
-        Me.ucrChkVariable.Size = New System.Drawing.Size(100, 23)
+        Me.ucrChkVariable.Size = New System.Drawing.Size(138, 27)
         Me.ucrChkVariable.TabIndex = 162
         '
         'ucrTryNewDataFrame
@@ -415,31 +526,17 @@ Partial Class dlgNewDataFrame
         Me.ucrNewDFName.Size = New System.Drawing.Size(416, 24)
         Me.ucrNewDFName.TabIndex = 14
         '
-        'ucrNudCols
-        '
-        Me.ucrNudCols.AutoSize = True
-        Me.ucrNudCols.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.ucrNudCols.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.ucrNudCols.Location = New System.Drawing.Point(94, 56)
-        Me.ucrNudCols.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
-        Me.ucrNudCols.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
-        Me.ucrNudCols.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.ucrNudCols.Name = "ucrNudCols"
-        Me.ucrNudCols.Size = New System.Drawing.Size(95, 20)
-        Me.ucrNudCols.TabIndex = 11
-        Me.ucrNudCols.Value = New Decimal(New Integer() {0, 0, 0, 0})
-        '
         'ucrNudRows
         '
         Me.ucrNudRows.AutoSize = True
         Me.ucrNudRows.DecimalPlaces = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudRows.Increment = New Decimal(New Integer() {1, 0, 0, 0})
-        Me.ucrNudRows.Location = New System.Drawing.Point(310, 56)
+        Me.ucrNudRows.Location = New System.Drawing.Point(323, 56)
         Me.ucrNudRows.Margin = New System.Windows.Forms.Padding(4, 5, 4, 5)
         Me.ucrNudRows.Maximum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.ucrNudRows.Minimum = New Decimal(New Integer() {0, 0, 0, 0})
         Me.ucrNudRows.Name = "ucrNudRows"
-        Me.ucrNudRows.Size = New System.Drawing.Size(95, 20)
+        Me.ucrNudRows.Size = New System.Drawing.Size(57, 20)
         Me.ucrNudRows.TabIndex = 9
         Me.ucrNudRows.Value = New Decimal(New Integer() {0, 0, 0, 0})
         '
@@ -453,91 +550,14 @@ Partial Class dlgNewDataFrame
         Me.ucrBase.Size = New System.Drawing.Size(408, 52)
         Me.ucrBase.TabIndex = 15
         '
-        'rdoLists
-        '
-        Me.rdoLists.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rdoLists.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption
-        Me.rdoLists.FlatAppearance.BorderSize = 2
-        Me.rdoLists.FlatAppearance.CheckedBackColor = System.Drawing.SystemColors.ActiveCaption
-        Me.rdoLists.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.rdoLists.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.rdoLists.Location = New System.Drawing.Point(352, 15)
-        Me.rdoLists.Name = "rdoLists"
-        Me.rdoLists.Size = New System.Drawing.Size(85, 27)
-        Me.rdoLists.TabIndex = 165
-        Me.rdoLists.TabStop = True
-        Me.rdoLists.Text = "Lists"
-        Me.rdoLists.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rdoLists.UseVisualStyleBackColor = True
-        '
-        'lblCategories
-        '
-        Me.lblCategories.AutoSize = True
-        Me.lblCategories.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.lblCategories.Location = New System.Drawing.Point(19, 59)
-        Me.lblCategories.Name = "lblCategories"
-        Me.lblCategories.Size = New System.Drawing.Size(52, 13)
-        Me.lblCategories.TabIndex = 169
-        Me.lblCategories.Text = "Category:"
-        '
-        'ucrInputLists
-        '
-        Me.ucrInputLists.AddQuotesIfUnrecognised = True
-        Me.ucrInputLists.AutoSize = True
-        Me.ucrInputLists.IsMultiline = True
-        Me.ucrInputLists.IsReadOnly = False
-        Me.ucrInputLists.Location = New System.Drawing.Point(21, 143)
-        Me.ucrInputLists.Name = "ucrInputLists"
-        Me.ucrInputLists.Size = New System.Drawing.Size(415, 31)
-        Me.ucrInputLists.TabIndex = 171
-        '
-        'ucrInputCategory
-        '
-        Me.ucrInputCategory.AddQuotesIfUnrecognised = True
-        Me.ucrInputCategory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ucrInputCategory.GetSetSelectedIndex = -1
-        Me.ucrInputCategory.IsReadOnly = False
-        Me.ucrInputCategory.Location = New System.Drawing.Point(77, 52)
-        Me.ucrInputCategory.Name = "ucrInputCategory"
-        Me.ucrInputCategory.Size = New System.Drawing.Size(166, 26)
-        Me.ucrInputCategory.TabIndex = 172
-        '
-        'ucrInputListInCategory
-        '
-        Me.ucrInputListInCategory.AddQuotesIfUnrecognised = True
-        Me.ucrInputListInCategory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.ucrInputListInCategory.GetSetSelectedIndex = -1
-        Me.ucrInputListInCategory.IsReadOnly = False
-        Me.ucrInputListInCategory.Location = New System.Drawing.Point(77, 84)
-        Me.ucrInputListInCategory.Name = "ucrInputListInCategory"
-        Me.ucrInputListInCategory.Size = New System.Drawing.Size(166, 26)
-        Me.ucrInputListInCategory.TabIndex = 173
-        '
-        'lblLists
-        '
-        Me.lblLists.AutoSize = True
-        Me.lblLists.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.lblLists.Location = New System.Drawing.Point(40, 87)
-        Me.lblLists.Name = "lblLists"
-        Me.lblLists.Size = New System.Drawing.Size(31, 13)
-        Me.lblLists.TabIndex = 174
-        Me.lblLists.Text = "Lists:"
-        '
-        'ucrChkRCommand
-        '
-        Me.ucrChkRCommand.AutoSize = True
-        Me.ucrChkRCommand.Checked = False
-        Me.ucrChkRCommand.Location = New System.Drawing.Point(19, 114)
-        Me.ucrChkRCommand.Name = "ucrChkRCommand"
-        Me.ucrChkRCommand.Size = New System.Drawing.Size(118, 23)
-        Me.ucrChkRCommand.TabIndex = 175
-        '
         'dlgNewDataFrame
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(458, 378)
+        Me.Controls.Add(Me.ucrNudCols)
+        Me.Controls.Add(Me.dataTypeGridView)
         Me.Controls.Add(Me.ucrChkRCommand)
         Me.Controls.Add(Me.lblLists)
         Me.Controls.Add(Me.ucrInputListInCategory)
@@ -546,7 +566,6 @@ Partial Class dlgNewDataFrame
         Me.Controls.Add(Me.lblCategories)
         Me.Controls.Add(Me.rdoLists)
         Me.Controls.Add(Me.ucrChkIncludeLabel)
-        Me.Controls.Add(Me.dataTypeGridView)
         Me.Controls.Add(Me.ucrChkVariable)
         Me.Controls.Add(Me.ucrTryNewDataFrame)
         Me.Controls.Add(Me.ucrInputCommand)
@@ -559,7 +578,6 @@ Partial Class dlgNewDataFrame
         Me.Controls.Add(Me.rdoConstruct)
         Me.Controls.Add(Me.ucrPnlDataFrame)
         Me.Controls.Add(Me.ucrNewDFName)
-        Me.Controls.Add(Me.ucrNudCols)
         Me.Controls.Add(Me.ucrNudRows)
         Me.Controls.Add(Me.lblColumns)
         Me.Controls.Add(Me.lblRows)
@@ -606,12 +624,6 @@ Partial Class dlgNewDataFrame
     Friend WithEvents ucrChkVariable As ucrCheck
     Friend WithEvents dataTypeGridView As DataGridView
     Friend WithEvents ucrChkIncludeLabel As ucrCheck
-    Friend WithEvents no As DataGridViewTextBoxColumn
-    Friend WithEvents colNames As DataGridViewTextBoxColumn
-    Friend WithEvents cbType As DataGridViewComboBoxColumn
-    Friend WithEvents colDefault As DataGridViewComboBoxColumn
-    Friend WithEvents colLevels As DataGridViewComboBoxColumn
-    Friend WithEvents colLabel As DataGridViewTextBoxColumn
     Friend WithEvents rdoLists As RadioButton
     Friend WithEvents lblCategories As Label
     Friend WithEvents ucrInputLists As ucrInputTextBox
@@ -619,4 +631,10 @@ Partial Class dlgNewDataFrame
     Friend WithEvents ucrInputListInCategory As ucrInputComboBox
     Friend WithEvents lblLists As Label
     Friend WithEvents ucrChkRCommand As ucrCheck
+    Friend WithEvents no As DataGridViewTextBoxColumn
+    Friend WithEvents colNames As DataGridViewTextBoxColumn
+    Friend WithEvents cbType As DataGridViewComboBoxColumn
+    Friend WithEvents colDefault As DataGridViewComboBoxColumn
+    Friend WithEvents colLevels As DataGridViewComboBoxColumn
+    Friend WithEvents colLabel As DataGridViewTextBoxColumn
 End Class

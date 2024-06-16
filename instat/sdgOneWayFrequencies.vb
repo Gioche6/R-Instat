@@ -17,9 +17,10 @@
 Imports instat.Translations
 Public Class sdgOneWayFrequencies
     Public bControlsInitialised As Boolean = False
-    Public clsOneWayTableFreq, clsOneWayGraphFreq, clsOneWayPlotGrid, clsOneWayListPlot As New RFunction
+    Public clsOneWayTableFreq, clsOneWayGraphFreq, clsOneWayGrid As New RFunction
 
     Private Sub sdgOneWayFrequencies_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        SetHelpOptions()
         autoTranslate(Me)
     End Sub
 
@@ -30,7 +31,6 @@ Public Class sdgOneWayFrequencies
         Dim dctColors As New Dictionary(Of String, String)
 
         ucrInputGraphTitle.SetParameter(New RParameter("title", 2))
-
         'Table Only
         ucrInputTitle.SetParameter(New RParameter("title", 5))
 
@@ -120,14 +120,13 @@ Public Class sdgOneWayFrequencies
         bControlsInitialised = True
     End Sub
 
-    Public Sub SetRFunction(clsNewSjtFreq As RFunction, clsNewSjpFrq As RFunction, clsNewPlotGrid As RFunction, clsNewSjPlotList As RFunction, Optional bReset As Boolean = False)
+    Public Sub SetRFunction(clsNewTableFreq As RFunction, clsNewGraphFrq As RFunction, clsNewGrid As RFunction, Optional bReset As Boolean = False)
         If Not bControlsInitialised Then
             InitialiseControls()
         End If
-        clsOneWayTableFreq = clsNewSjtFreq
-        clsOneWayGraphFreq = clsNewSjpFrq
-        clsOneWayPlotGrid = clsNewPlotGrid
-        clsOneWayListPlot = clsNewSjPlotList
+        clsOneWayTableFreq = clsNewTableFreq
+        clsOneWayGraphFreq = clsNewGraphFrq
+        clsOneWayGrid = clsNewGrid
 
         ucrChkShowStrings.SetRCode(clsOneWayTableFreq, bReset, bCloneIfNeeded:=True)
         ucrInputTitle.SetRCode(clsOneWayTableFreq, bReset, bCloneIfNeeded:=True)
@@ -153,5 +152,16 @@ Public Class sdgOneWayFrequencies
             tbpOneWayFrequencies.SelectedIndex = i
         Next
         tbpOneWayFrequencies.SelectedIndex = 0
+    End Sub
+
+    Private Sub SetHelpOptions()
+        Select Case dlgOneWayFrequencies.enumOnewayMode
+            Case dlgOneWayFrequencies.OnewayMode.Prepare
+                ucrBaseOneWayFrequencies.iHelpTopicID = 620
+            Case dlgOneWayFrequencies.OnewayMode.Describe
+                ucrBaseOneWayFrequencies.iHelpTopicID = 96
+            Case dlgOneWayFrequencies.OnewayMode.Climatic
+                ucrBaseOneWayFrequencies.iHelpTopicID = 273
+        End Select
     End Sub
 End Class
